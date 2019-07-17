@@ -16,7 +16,7 @@ class MyApp extends AppMVC {
     return MaterialApp(
       title: title,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: home,
     );

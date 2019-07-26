@@ -52,7 +52,7 @@ class VoieData {
     return result;
   }
 
-  static Future<int> deleteVoieById(int id, Database db) async {
+  static Future<int> deleteVoieById(int id) async {
     db = await databaseHelper.database;
     int result = await db.delete(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
     return result;
@@ -67,16 +67,16 @@ class VoieData {
   }
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Voie List' [ List<Voie> ]
-  static Future<List<Voie>> getNoteList() async {
+  static Future<List<Voie>> getVoieList() async {
     db = await databaseHelper.database;
-    var noteMapList = await getVoieMapList();
-    int count = noteMapList.length;
+    var voieMapList = await getVoieMapList();
+    int count = voieMapList.length;
 
-    List<Voie> noteList = List<Voie>();
+    List<Voie> voieList = List<Voie>();
     for (int i = 0; i < count; i++) {
-      noteList.add(Voie.fromMapObject(noteMapList[i]));
+      voieList.add(Voie.fromMapObject(voieMapList[i]));
     }
 
-    return noteList;
+    return voieList;
   }
 }

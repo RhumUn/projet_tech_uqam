@@ -12,6 +12,7 @@ class VoieData {
   static final String colonneCouleur = "couleur";
   static final String colonneCommentaire = "commentaire";
   static final String colonneImage = "image";
+  static final String colonneNom = "nom";
   static final String colonneFkTypeValidation = "id_TypeValidation";
   static final String colonneFkDifficulte = "id_Difficulte";
   static final String colonneFkVoieParent = "id_Voie";
@@ -26,6 +27,7 @@ class VoieData {
         $colonneEtat              Bool NOT NULL ,
         $colonneVideo             Varchar (150),
         $colonneCouleur           Varchar (50),
+        $colonneNom               Varchar (50),
         $colonneCommentaire       Text,
         $colonneImage             Varchar (150),
         $colonneFkTypeValidation  Integer NOT NULL ,
@@ -79,5 +81,10 @@ class VoieData {
     }
 
     return voieList;
+  }
+
+  static Future<int> getLastItemId() async {
+    db = await databaseHelper.database;
+
   }
 }

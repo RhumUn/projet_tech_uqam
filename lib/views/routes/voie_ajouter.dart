@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
-import 'package:flutter_uqam/views/home/home.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 
 // Create a Form widget.
@@ -24,6 +23,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       body: Form(
           key: _formKey,
           child: new ListView(
+            padding: const EdgeInsets.only(left: 15.0, top: 20.0, right: 15.0),
             children: getFormWidget(),
           )),
     );
@@ -31,7 +31,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
 
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
-    List<String> _colors = <String>['', 'red', 'green', 'blue', 'orange'];
+    List<String> _colors = <String>['', 'Rouge', 'Vert', 'Bleu', 'Orange'];
     List<String> _difficuties = <String>[
       '',
       'V0',
@@ -39,6 +39,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       'V2',
       'V3',
       'V4',
+      'V5',
       'V6',
       'V7',
       'V8',
@@ -46,8 +47,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       'V10',
       'V11'
     ];
-
-    String _color = '';
 
     formWidget.add(new TextFormField(
       decoration: const InputDecoration(
@@ -60,7 +59,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     formWidget.add(new TextFormField(
       decoration: const InputDecoration(
         icon: const Icon(Icons.category),
-        hintText: 'Enter le nombre de prises',
+        hintText: 'Entrez le nombre de prises',
         labelText: 'Nombre de prises',
       ),
       keyboardType: TextInputType.datetime,
@@ -80,7 +79,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
             icon: const Icon(Icons.whatshot),
             labelText: 'Difficulté',
           ),
-          isEmpty: _color == '',
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
               value: voie.difficulte,
@@ -95,7 +93,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
               items: _difficuties.map((String value) {
                 return new DropdownMenuItem(
                   value: value,
-                  child: new Text(value),
+                  child: ReusableWidgets.getDifficultyTag(value),
                 );
               }).toList(),
             ),
@@ -111,14 +109,12 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
             icon: const Icon(Icons.color_lens),
             labelText: 'Couleur',
           ),
-          isEmpty: _color == '',
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
-              value: _color,
+              value: voie.couleur,
               isDense: true,
               onChanged: (String newValue) {
                 setState(() {
-                  //newContact.favoriteColor = newValue;
                   voie.couleur = newValue;
                   state.didChange(newValue);
                 });
@@ -135,6 +131,12 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       },
     ));
 
+    formWidget.add(new TextFormField(
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+          icon: const Icon(Icons.comment), labelText: 'Ecrivez un commentaire'),
+    ));
+
     formWidget.add(new Container(
         padding: const EdgeInsets.only(left: 40.0, top: 20.0),
         child: new RaisedButton(
@@ -146,5 +148,10 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         )));
 
     return formWidget;
+  }
+
+  List<Widget> getDifficultyTagList(List<String> _difficuties) {
+    _difficuties
+        .forEach((difficulty) => ReusableWidgets.getDifficultyTag(difficulty));
   }
 }

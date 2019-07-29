@@ -7,6 +7,7 @@ class Voie {
   String _video;
   String _couleur;
   String _commentaire;
+  String _nom;
   String _image;
   String _typeValidation = "non_validee";
   String _difficulte;
@@ -130,5 +131,15 @@ class Voie {
         return false;
         break;
     }
+  }
+
+  String get nom => _nom;
+
+  set nom(String value) {
+    _nom = value;
+  }
+
+  String genererNom(){
+
   }
 }

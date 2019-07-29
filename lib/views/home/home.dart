@@ -44,10 +44,3 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class ReusableWidgets {
-  static getAppBar(String title) {
-    return AppBar(
-      title: Text(title),
-    );
-  }
-}

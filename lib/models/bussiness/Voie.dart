@@ -1,37 +1,30 @@
 import 'package:flutter_uqam/models/data/VoieData.dart';
-
+import 'package:flutter_uqam/tools/tools.dart';
 class Voie {
   int _id;
   int _nombre_prise;
-  bool _estValidee;
+  int _etat = Tools.boolToInt(false);
   String _video;
   String _couleur;
   String _commentaire;
   String _image;
-  String _typeValidation;
+  String _typeValidation = "non_validee";
   String _difficulte;
   int _parentId;
   int _seanceId;
 
-  Voie(this._difficulte, this._seanceId) {
-    this._estValidee = false;
-    this._typeValidation = "non_validee";
-  }
+  Voie();
 
-  Voie.withParentId(this._difficulte, this._seanceId, this._parentId) {
-    this._estValidee = false;
-    this._typeValidation = "non_validee";
-  }
+  Voie.withDifficulty(this._difficulte, this._seanceId) {}
 
-  Voie.withId(this._id, this._difficulte, this._seanceId) {
-    this._estValidee = false;
-    this._typeValidation = "non_validee";
-  }
+  Voie.withParentId(this._difficulte, this._seanceId, this._parentId) {}
+
+  Voie.withId(this._id, this._difficulte, this._seanceId) {}
 
   Voie.fromMapObject(Map<String, dynamic> map) {
     this._id = map[VoieData.colonnePkId];
     this._nombre_prise = map[VoieData.colonneNbPrise];
-    this._estValidee = map[VoieData.colonneEtat];
+    this.etat = map[VoieData.colonneEtat];
     this._video = map[VoieData.colonneVideo];
     this._couleur = map[VoieData.colonneCouleur];
     this._commentaire = map[VoieData.colonneCommentaire];
@@ -47,7 +40,7 @@ class Voie {
       map[VoieData.colonnePkId] = this._id;
     }
     map[VoieData.colonneNbPrise] = this._nombre_prise;
-    map[VoieData.colonneEtat] = this._estValidee;
+    map[VoieData.colonneEtat] = this._etat;
     map[VoieData.colonneVideo] = this._video;
     map[VoieData.colonneCouleur] = this._couleur;
     map[VoieData.colonneCommentaire] = this._commentaire;
@@ -107,10 +100,10 @@ class Voie {
     _video = value;
   }
 
-  bool get estValidee => _estValidee;
+  int get etat => _etat;
 
-  set estValidee(bool value) {
-    _estValidee = value;
+  set etat(int value) {
+    _etat = value;
   }
 
   int get nombre_prise => _nombre_prise;
@@ -123,5 +116,19 @@ class Voie {
 
   set id(int value) {
     _id = value;
+  }
+
+  bool getEtat() {
+    switch (this.etat) {
+      case 0:
+        return false;
+        break;
+      case 1:
+        return true;
+        break;
+      default:
+        return false;
+        break;
+    }
   }
 }

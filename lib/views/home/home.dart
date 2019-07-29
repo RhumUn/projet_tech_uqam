@@ -1,73 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:flutter_uqam/controllers/homeController.dart';
+import 'package:flutter_uqam/views/routes/voie_liste.dart';
 
-class MyApp extends AppMVC {
-  MyApp({Key key}) : super(key: key);
+class HomePage extends StatelessWidget {
 
-  static final String title = 'Flutter Demo Home Page';
-  final MyHomePage home = MyHomePage(title);
+  List<Widget> containers = [
+    Container(
+        child: VoieList()
+    ),
+    Container(
+      color: Colors.blue,
+    ),
+    Container(
+      color: Colors.deepPurple,
+    )
+  ];
 
-  ControllerMVC get controller => home.controller;
-
-  /// This is 'the View' for this application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('MontBloc'),
+          bottom: TabBar(
+            tabs: <Widget>[
+              Tab(
+                text: 'Voies',
+              ),
+              Tab(
+                text: 'Séances',
+              ),
+              Tab(
+                text: 'Stats',
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: containers,
+        ),
       ),
-      home: home,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage(this.title, {Key key}) : super(key: key);
-  final String title;
-  final _MyHomePageState state = _MyHomePageState();
-
-  Controller get controller => state.controller;
-
-  @override
-  State createState() => state;
-}
-
-class _MyHomePageState extends StateMVC<MyHomePage> {
-  _MyHomePageState() : super(Controller()) {
-    _con = controller;
-  }
-  Controller _con;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take a property value from the MyHomePage Widget, and we use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              widget.title,
-            ),
-            Text(
-              '${_con.counter}',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(_con.incrementCounter);
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+class ReusableWidgets {
+  static getAppBar(String title) {
+    return AppBar(
+      title: Text(title),
     );
   }
 }

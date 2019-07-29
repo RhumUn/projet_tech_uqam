@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-// change `flutter_database` to whatever your project name is
-import 'package:flutter_uqam/models/data/VoieData.dart';
-import 'package:flutter_uqam/models/bussiness/Voie.dart';
+import 'package:flutter_uqam/views/home/home.dart';
+import 'package:flutter_uqam/views/routes/voie_ajouter.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,40 +8,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SQFlite Demo',
+      title: 'MontBloc',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: HomePage(),
+        routes: <String, WidgetBuilder> {
+          "ajouter_voie" : (BuildContext context) => new AjouterVoieForm(),
+        }
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
 
-  Voie voie = new Voie("V2", 1);
-
-  // homepage layout
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('sqflite'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              child: Text('insert', style: TextStyle(fontSize: 20),),
-              onPressed: () {
-                VoieData.insertVoie(voie);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 

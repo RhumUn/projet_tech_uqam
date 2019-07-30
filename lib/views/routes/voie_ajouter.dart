@@ -15,6 +15,28 @@ class AjouterVoieForm extends StatefulWidget {
 class AjouterVoieFormState extends State<AjouterVoieForm> {
   final _formKey = GlobalKey<FormState>();
   final voie = Voie();
+  final nomController = TextEditingController();
+  final nbPrisesController = TextEditingController();
+  final commentaireController = TextEditingController();
+
+  final List<String> _colors = <String>['Rouge', 'Vert', 'Bleu', 'Orange'];
+  final List<String> _typesValidation = <String>['A vue', 'Flash', 'Avec essais'];
+  final List<String> _difficuties = <String>[
+    'V0',
+    'V1',
+    'V2',
+    'V3',
+    'V4',
+    'V5',
+    'V6',
+    'V7',
+    'V8',
+    'V9',
+    'V10',
+    'V11'
+  ];
+
+  Future<int> futureId = VoieData.getLastItemId();
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +51,18 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     );
   }
 
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed.
+    nomController.dispose();
+    nbPrisesController.dispose();
+    commentaireController.dispose();
+    super.dispose();
+  }
+
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
-    List<String> _colors = <String>['', 'Rouge', 'Vert', 'Bleu', 'Orange'];
-    List<String> _difficuties = <String>[
-      '',
-      'V0',
-      'V1',
-      'V2',
-      'V3',
-      'V4',
-      'V5',
-      'V6',
-      'V7',
-      'V8',
-      'V9',
-      'V10',
-      'V11'
-    ];
+
 
     formWidget.add(new TextFormField(
       decoration: const InputDecoration(
@@ -54,6 +70,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         hintText: 'Entrez le nom de la voie',
         labelText: 'Nom',
       ),
+      controller: nomController,
     ));
 
     formWidget.add(new TextFormField(
@@ -62,7 +79,8 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         hintText: 'Entrez le nombre de prises',
         labelText: 'Nombre de prises',
       ),
-      keyboardType: TextInputType.datetime,
+      keyboardType: TextInputType.number,
+      controller: nbPrisesController
     ));
 
     formWidget.add(SwitchListTile(
@@ -85,7 +103,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
               isDense: true,
               onChanged: (String newValue) {
                 setState(() {
-                  //newContact.favoriteColor = newValue;
                   voie.difficulte = newValue;
                   state.didChange(newValue);
                 });
@@ -94,6 +111,50 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
                 return new DropdownMenuItem(
                   value: value,
                   child: ReusableWidgets.getDifficultyTag(value),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    ));
+
+    formWidget.add(new FormField(
+      builder: (FormFieldState state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            icon: const Icon(Icons.playlist_add_check),
+            labelText: 'Type de validation',
+          ),
+          child: new DropdownButtonHideUnderline(
+            child: new DropdownButton(
+              value: voie.typeValidation,
+              isDense: true,
+              onChanged: (String newValue) {
+                setState(() {
+                  //newContact.favoriteColor = newValue;
+                  voie.typeValidation = newValue;
+                  state.didChange(newValue);
+                });
+              },
+              items: _typesValidation.map((String value) {
+                return new DropdownMenuItem(
+                  value: value,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Text(value)
+                        ),
+                      Container(
+                        child: Icon(
+                          getIconTypeValidation(value),
+                          color: Colors.blue[500],
+                        ),
+                      ),
+                    ],
+                  )
+                  ,
                 );
               }).toList(),
             ),
@@ -133,25 +194,44 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
 
     formWidget.add(new TextFormField(
       keyboardType: TextInputType.multiline,
+      maxLines: null,
+      controller: commentaireController,
       decoration: InputDecoration(
           icon: const Icon(Icons.comment), labelText: 'Ecrivez un commentaire'),
     ));
 
     formWidget.add(new Container(
-        padding: const EdgeInsets.only(left: 40.0, top: 20.0),
+        padding: const EdgeInsets.only(top: 20.0),
         child: new RaisedButton(
-          child: const Text('Submit'),
+          child: const Text('Valider'),
           onPressed: () {
+            voie.nom = nomController.text;
+            voie.commentaire = commentaireController.text;
+            voie.nombre_prise = int.parse(nbPrisesController.text);
             VoieData.insertVoie(voie);
             Navigator.pop(context);
           },
         )));
-
     return formWidget;
   }
 
   List<Widget> getDifficultyTagList(List<String> _difficuties) {
     _difficuties
         .forEach((difficulty) => ReusableWidgets.getDifficultyTag(difficulty));
+  }
+
+  IconData getIconTypeValidation(String typeValidation){
+    switch (typeValidation){
+      case "A vue":
+        return Icons.remove_red_eye;
+        break;
+      case "Flash":
+        return Icons.flash_on;
+        break;
+      case "Avec essais":
+        return Icons.all_inclusive;
+      default:
+        return Icons.trip_origin;
+    }
   }
 }

@@ -71,7 +71,6 @@ class VoieData {
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Voie List' [ List<Voie> ]
   static Future<List<Voie>> getVoieList() async {
-    db = await databaseHelper.database;
     var voieMapList = await getVoieMapList();
     int count = voieMapList.length;
 
@@ -85,6 +84,10 @@ class VoieData {
 
   static Future<int> getLastItemId() async {
     db = await databaseHelper.database;
+    List<Map<String, dynamic>> x =
+    await db.rawQuery('SELECT MAX(id) FROM $voieTable');
+    int lastId = Sqflite.firstIntValue(x);
 
+    return lastId;
   }
 }

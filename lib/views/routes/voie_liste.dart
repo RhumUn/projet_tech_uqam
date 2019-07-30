@@ -58,7 +58,7 @@ class VoieListState extends State<VoieList> {
           child: ListTile(
             leading: ReusableWidgets.getDifficultyTag(this.voieList[position].difficulte),
             title: Text(
-              this.voieList[position].id.toString(),
+              this.voieList[position].nom == null?"Sans nom":this.voieList[position].nom,
               style: titleStyle,
             ),
             subtitle:
@@ -74,7 +74,7 @@ class VoieListState extends State<VoieList> {
             ),
             onTap: () {
               debugPrint("ListTile Tapped");
-              //navigateToDetail(this.voieList[position],'Edit Voie');
+              //navigateToDetail(this.voieList[position],'Détails voie');
             },
           ),
         );
@@ -94,15 +94,15 @@ class VoieListState extends State<VoieList> {
 
 
 
-/*  void navigateToDetail(Voie voie) async {
-    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+  void navigateToDetail(Voie voie) async {
+    /*bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return voie;
     }));
 
     if (result == true) {
       updateListView();
-    }
-  }*/
+    }*/
+  }
 
   void updateListView() {
     final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();

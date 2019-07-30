@@ -35,12 +35,19 @@ class DatabaseHelper {
     String path = directory.path + _databaseName;
 
     // Open/create the database at a given path
-    var notesDatabase = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var notesDatabase = await openDatabase(path, version: 3, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return notesDatabase;
   }
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute(VoieData.createTableScript);
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) {
+    if (oldVersion < newVersion) {
+      db.execute("ALTER TABLE voie ADD COLUMN nom TEXT;");
+      db.execute("ALTER TABLE voie ADD COLUMN commentaire Varchar (50);");
+    }
   }
 }

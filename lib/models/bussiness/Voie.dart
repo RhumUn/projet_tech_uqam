@@ -1,5 +1,6 @@
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/tools/tools.dart';
+
 class Voie {
   int _id;
   int _nombre_prise;
@@ -7,16 +8,23 @@ class Voie {
   String _video;
   String _couleur;
   String _commentaire;
-  String _nom;
-  String _image;
-  String _typeValidation = "non_validee";
-  String _difficulte;
+
+  set nom(String value) {
+    _nom = value;
+  }
+
+  String _nom = "";
+  String _image = "";
+  String _typeValidation = "Avec essais";
+  String _difficulte = "V0";
   int _parentId;
   int _seanceId;
 
   Voie();
 
-  Voie.withDifficulty(this._difficulte, this._seanceId) {}
+  Voie.withDifficulty(this._difficulte, this._seanceId) {
+    genererNom();
+  }
 
   Voie.withParentId(this._difficulte, this._seanceId, this._parentId) {}
 
@@ -24,8 +32,9 @@ class Voie {
 
   Voie.fromMapObject(Map<String, dynamic> map) {
     this._id = map[VoieData.colonnePkId];
+    this._nom = map[VoieData.colonneNom];
     this._nombre_prise = map[VoieData.colonneNbPrise];
-    this.etat = map[VoieData.colonneEtat];
+    this._etat = map[VoieData.colonneEtat];
     this._video = map[VoieData.colonneVideo];
     this._couleur = map[VoieData.colonneCouleur];
     this._commentaire = map[VoieData.colonneCommentaire];
@@ -40,6 +49,7 @@ class Voie {
     if (this._id != null) {
       map[VoieData.colonnePkId] = this._id;
     }
+    map[VoieData.colonneNom] = this._nom;
     map[VoieData.colonneNbPrise] = this._nombre_prise;
     map[VoieData.colonneEtat] = this._etat;
     map[VoieData.colonneVideo] = this._video;
@@ -133,13 +143,19 @@ class Voie {
     }
   }
 
-  String get nom => _nom;
-
-  set nom(String value) {
-    _nom = value;
+  String get nom {
+    if (_nom == null || _nom.isEmpty) {
+      genererNom();
+    }
+    return _nom;
   }
 
-  String genererNom(){
-
+  void genererNom() async {
+    int lastId = await VoieData.getLastItemId();
+    if (lastId != null) {
+      lastId++;
+      _nom = "Voie n°$lastId";
+    }
+    _nom = "Erreur nom";
   }
 }

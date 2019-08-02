@@ -148,7 +148,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
                         ),
                       Container(
                         child: Icon(
-                          getIconTypeValidation(value),
+                          Tools.getIconTypeValidation(value),
                           color: Colors.blue[500],
                         ),
                       ),
@@ -213,25 +213,5 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
           },
         )));
     return formWidget;
-  }
-
-  List<Widget> getDifficultyTagList(List<String> _difficuties) {
-    _difficuties
-        .forEach((difficulty) => ReusableWidgets.getDifficultyTag(difficulty));
-  }
-
-  IconData getIconTypeValidation(String typeValidation){
-    switch (typeValidation){
-      case "A vue":
-        return Icons.remove_red_eye;
-        break;
-      case "Flash":
-        return Icons.flash_on;
-        break;
-      case "Avec essais":
-        return Icons.all_inclusive;
-      default:
-        return Icons.trip_origin;
-    }
   }
 }

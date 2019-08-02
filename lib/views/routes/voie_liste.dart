@@ -5,6 +5,7 @@ import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 import 'package:flutter_uqam/views/routes/voie_ajouter.dart';
+import 'package:flutter_uqam/views/routes/voie_details.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';
 
@@ -56,14 +57,16 @@ class VoieListState extends State<VoieList> {
           color: Colors.white,
           elevation: 2.0,
           child: ListTile(
-            leading: ReusableWidgets.getDifficultyTag(this.voieList[position].difficulte),
+            leading: ReusableWidgets.getDifficultyTag(
+                this.voieList[position].difficulte),
             title: Text(
-              this.voieList[position].nom == ""?"Sans nom":this.voieList[position].nom,
+              this.voieList[position].nom == null
+                  ? "Sans nom"
+                  : this.voieList[position].nom,
               style: titleStyle,
             ),
-            subtitle:
-                Text("Validée: ${this.voieList[position].getEtat()}"),
-            trailing: GestureDetector(
+            subtitle: Text("${this.voieList[position].nombre_prise} prise(s)"),
+/*            trailing: GestureDetector(
               child: Icon(
                 Icons.delete,
                 color: Colors.grey,
@@ -71,10 +74,23 @@ class VoieListState extends State<VoieList> {
               onTap: () {
                 _delete(context, voieList[position]);
               },
+            ),*/
+            trailing: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(Tools.getIconTypeValidation(
+                    voieList[position].typeValidation)),
+                Icon(Tools.getIconEtatValidation(
+                    Tools.intToBool(voieList[position].etat))),
+              ],
             ),
             onTap: () {
-              debugPrint("ListTile Tapped");
-              //navigateToDetail(this.voieList[position],'Détails voie');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VoieDetails(voie: voieList[position]),
+                ),
+              );
             },
           ),
         );
@@ -82,26 +98,12 @@ class VoieListState extends State<VoieList> {
     );
   }
 
-
-
   void _delete(BuildContext context, Voie voie) async {
     int result = await VoieData.deleteVoieById(voie.id);
     if (result != 0) {
-      ReusableWidgets.showSnackBar(context, 'Voie Deleted Successfully');
+      ReusableWidgets.showSnackBar(context, 'Voie supprimée avec succès');
       updateListView();
     }
-  }
-
-
-
-  void navigateToDetail(Voie voie) async {
-    /*bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return voie;
-    }));
-
-    if (result == true) {
-      updateListView();
-    }*/
   }
 
   void updateListView() {

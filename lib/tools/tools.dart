@@ -5,27 +5,57 @@ class Tools {
     return value ? 1 : 0;
   }
 
-  static Color getDifficultyColor(String difficulty) {
-    Color value = Colors.white70;
-    (difficulty == 'V0' || difficulty == 'V1')
-        ? value = Colors.green
-        : value = value;
-    (difficulty == 'V2' || difficulty == 'V3')
-        ? value = Colors.blue
-        : value = value;
-    (difficulty == 'V4' || difficulty == 'V5')
-        ? value = Colors.purple
-        : value = value;
-    (difficulty == 'V6' || difficulty == 'V7')
-        ? value = Colors.yellow
-        : value = value;
-    (difficulty == 'V8' || difficulty == 'V9')
-        ? value = Colors.red
-        : value = value;
-    (difficulty == 'V10' || difficulty == 'V11' || difficulty == 'V12')
-        ? value = Colors.black
-        : value = value;
+  static bool intToBool(int value) {
 
+    return value == 1 ? true : false;
+  }
+
+  static Color getDifficultyColor(int difficultyValue) {
+    if (difficultyValue < 2) {
+      return Colors.green;
+    } else if (difficultyValue < 4) {
+      return Colors.blue;
+    } else if (difficultyValue < 6) {
+      return Colors.purple;
+    } else if (difficultyValue < 8) {
+      return Colors.yellow;
+    } else if (difficultyValue < 10) {
+      return Colors.red;
+    } else if (difficultyValue > 10) {
+      return Colors.black;
+    } else {
+      return Colors.white70;
+    }
+  }
+
+  static int getDifficultyValue(String difficulty) {
+    difficulty = difficulty.replaceAll('V', '');
+    return int.tryParse(difficulty);
+  }
+
+  static List<Widget> getDifficultyTagList(List<String> _difficuties) {
+    _difficuties
+        .forEach((difficulty) => ReusableWidgets.getDifficultyTag(difficulty));
+  }
+
+  static IconData getIconTypeValidation(String typeValidation) {
+    switch (typeValidation) {
+      case "A vue":
+        return Icons.remove_red_eye;
+        break;
+      case "Flash":
+        return Icons.flash_on;
+        break;
+      case "Avec essais":
+        return Icons.all_inclusive;
+      default:
+        return Icons.error_outline;
+    }
+  }
+
+  static IconData getIconEtatValidation(bool etat) {
+    IconData value;
+    etat ? value = Icons.check : value = Icons.close;
     return value;
   }
 
@@ -61,7 +91,8 @@ class ReusableWidgets {
 
   static Widget getDifficultyTag(String difficulty) {
     return CircleAvatar(
-      backgroundColor: Tools.getDifficultyColor(difficulty),
+      backgroundColor:
+          Tools.getDifficultyColor(Tools.getDifficultyValue(difficulty)),
       child: Text(difficulty),
     );
   }

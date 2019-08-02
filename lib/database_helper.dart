@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
+import 'package:flutter_uqam/models/data/SeanceData.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
@@ -35,19 +36,22 @@ class DatabaseHelper {
     String path = directory.path + _databaseName;
 
     // Open/create the database at a given path
-    var notesDatabase = await openDatabase(path, version: 3, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    var notesDatabase = await openDatabase(path, version: 5, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return notesDatabase;
   }
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute(VoieData.createTableScript);
+    await db.execute(SeanceData.createTableScript);
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      db.execute("ALTER TABLE voie ADD COLUMN nom TEXT;");
-      db.execute("ALTER TABLE voie ADD COLUMN commentaire Varchar (50);");
+      db.execute("ALTER TABLE seance DROP COLUMN ${SeanceData.colonneDate}");
+      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneDate} Text");
+      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneHeureDebut} Text");
+      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneHeureFin} Text");
     }
   }
 }

@@ -3,12 +3,15 @@ import 'package:flutter_uqam/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SeanceData {
-  static final String seanceTable = "Voie";
+  static final String seanceTable = "Seance";
 
   static final String colonnePkId = "id";
+  static final String colonneNom = "nom";
   static final String colonneDate = "date";
+  static final String colonneHeureDebut = "heureDebut";
+  static final String colonneHeureFin = "heureFin";
   static final String colonneCommentaire = "commentaire";
-  static final String colonneFKLieu = "id_Lieu";
+  static final String colonneLieu = "lieu";
 
   static DatabaseHelper databaseHelper = DatabaseHelper();
   static Database db;
@@ -16,10 +19,13 @@ class SeanceData {
   static final String createTableScript =
   '''
   CREATE TABLE $seanceTable(
-        $colonnePkId          Integer  PRIMARY KEY Autoincrement  NOT NULL ,
-        $colonneDate          Datetime NOT NULL ,
-        $colonneCommentaire   Text ,
-        $colonneFKLieu        Integer
+        $colonnePkId          Integer  PRIMARY KEY Autoincrement  NOT NULL,
+        $colonneNom           Varchar (50),
+        $colonneDate          Text NOT NULL,
+        $colonneHeureDebut    Text,
+        $colonneHeureFin      Text,
+        $colonneCommentaire   Text,
+        $colonneLieu          Varchar (50)
   );''';
 
   static Future<List<Map<String, dynamic>>> getSeanceMapList() async {

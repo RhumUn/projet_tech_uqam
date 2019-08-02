@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_uqam/views/Seance/seance_list.dart';
 import 'package:flutter_uqam/views/routes/voie_liste.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,7 +9,7 @@ class HomePage extends StatelessWidget {
         child: VoieList()
     ),
     Container(
-      color: Colors.blue,
+        child: SeanceList()
     ),
     Container(
       color: Colors.deepPurple,

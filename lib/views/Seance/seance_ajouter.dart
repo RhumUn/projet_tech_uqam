@@ -76,6 +76,12 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
               initialDate: currentValue ?? DateTime.now(),
               lastDate: DateTime(2100));
         },
+        // ignore: missing_return
+        validator: (DateTime value) {
+          if (value == null) {
+            return 'Veuillez entrer une date';
+          }
+        },
         controller: dateController,
       ),
     ]));
@@ -134,12 +140,6 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
         hintText: 'Entrez le lieu de la séance',
         labelText: 'Lieu',
       ),
-      // ignore: missing_return
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Veuillez entrer une date';
-        }
-      },
       controller: lieuController,
     ));
 

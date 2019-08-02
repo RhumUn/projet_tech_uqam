@@ -61,7 +61,6 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
     ));
 
     formWidget.add(new Column(children: <Widget>[
-      // Text('Date de la séance (${format.pattern})'),
       DateTimeField(
         decoration: const InputDecoration(
           icon: const Icon(Icons.date_range),
@@ -92,7 +91,7 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
           icon: const Icon(Icons.access_time),
           prefixIcon: const Icon(Icons.accessibility_new),
           hintText: "Entrez l'heure de début",
-          labelText: "Heure de début",
+          labelText: "Heure de début *",
         ),
         format: formatHeure,
         onShowPicker: (context, currentValue) async {
@@ -105,6 +104,12 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
                 child: child),
           );
           return DateTimeField.convert(time);
+        },
+        // ignore: missing_return
+        validator: (DateTime value) {
+          if (value == null) {
+            return "Veuillez entrer une heure d'arrivée";
+          }
         },
         controller: heureDebutController,
       ),
@@ -158,7 +163,11 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
           child: const Text('Enregistrer'),
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              seance.nom = nomController.text;
+              if(nomController.text.isEmpty){
+                seance.nom = "Sans nom";
+              } else {
+                seance.nom = nomController.text;
+              }
               seance.date = DateTime.tryParse(dateController.text);
               seance.heureDebut =
                   Tools.parseHourToDatetime(heureDebutController.text);

@@ -36,7 +36,7 @@ class DatabaseHelper {
     String path = directory.path + _databaseName;
 
     // Open/create the database at a given path
-    var notesDatabase = await openDatabase(path, version: 5, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    var notesDatabase = await openDatabase(path, version: 6, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return notesDatabase;
   }
 
@@ -48,10 +48,8 @@ class DatabaseHelper {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      db.execute("ALTER TABLE seance DROP COLUMN ${SeanceData.colonneDate}");
-      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneDate} Text");
-      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneHeureDebut} Text");
-      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneHeureFin} Text");
+      db.execute("ALTER TABLE seance DROP COLUMN ${SeanceData.colonneHeureDebut}");
+      db.execute("ALTER TABLE seance ADD COLUMN ${SeanceData.colonneHeureDebut} Text NOT NULL");
     }
   }
 }

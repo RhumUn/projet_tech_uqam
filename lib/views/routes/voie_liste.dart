@@ -58,7 +58,7 @@ class VoieListState extends State<VoieList> {
           child: ListTile(
             leading: ReusableWidgets.getDifficultyTag(this.voieList[position].difficulte),
             title: Text(
-              this.voieList[position].nom == null?"Sans nom":this.voieList[position].nom,
+              this.voieList[position].nom == ""?"Sans nom":this.voieList[position].nom,
               style: titleStyle,
             ),
             subtitle:

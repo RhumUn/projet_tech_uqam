@@ -32,8 +32,8 @@ class Seance {
     }
     map[SeanceData.colonneNom] = this._nom;
     map[SeanceData.colonneDate] = this._date.toString();
-    map[SeanceData.colonneHeureDebut] = "${this._heureDebut.hour}:${this._heureDebut.hour}";
-    map[SeanceData.colonneHeureFin] = "${this._heureFin.hour}:${this._heureFin.hour}";
+    map[SeanceData.colonneHeureDebut] = this._heureDebut.toString();
+    map[SeanceData.colonneHeureFin] = this._heureFin.toString();
     map[SeanceData.colonneLieu] = this._lieu;
     map[SeanceData.colonneCommentaire] = this._commentaire;
 

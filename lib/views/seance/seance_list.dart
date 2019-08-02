@@ -57,8 +57,12 @@ class SeanceListState extends State<SeanceList> {
           elevation: 2.0,
           child: ListTile(
             title: Text(
-              this.seanceList[position  ].id.toString(),
+              this.seanceList[position].nom,
               style: titleStyle,
+            ),
+            subtitle: Text(
+              "Date : ${this.seanceList[position].date.day}-${this.seanceList[position].date.month}-${this.seanceList[position].date.year} "
+              "${this.seanceList[position].heureDebut.hour}h${this.seanceList[position].heureDebut.minute}",
             ),
             trailing: GestureDetector(
               child: Icon(

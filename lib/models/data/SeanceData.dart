@@ -22,7 +22,7 @@ class SeanceData {
         $colonnePkId          Integer  PRIMARY KEY Autoincrement  NOT NULL,
         $colonneNom           Varchar (50),
         $colonneDate          Text NOT NULL,
-        $colonneHeureDebut    Text,
+        $colonneHeureDebut    Text NOT NULL,
         $colonneHeureFin      Text,
         $colonneCommentaire   Text,
         $colonneLieu          Varchar (50)
@@ -31,6 +31,12 @@ class SeanceData {
   static Future<List<Map<String, dynamic>>> getSeanceMapList() async {
     db = await databaseHelper.database;
     var result = await db.query(seanceTable);
+    return result;
+  }
+
+  static Future<List<Map<String, dynamic>>> getSeanceMapListOrderByDate() async {
+    db = await databaseHelper.database;
+    var result = await db.query(seanceTable, orderBy: "$colonneDate DESC");
     return result;
   }
 
@@ -63,7 +69,7 @@ class SeanceData {
   // Get the 'Map List' [ List<Map> ] and convert it to 'Seance List' [ List<Seance> ]
   static Future<List<Seance>> getSeanceList() async {
     db = await databaseHelper.database;
-    var seanceMapList = await getSeanceMapList();
+    var seanceMapList = await getSeanceMapListOrderByDate();
     int count = seanceMapList.length;
 
     List<Seance> seanceList = List<Seance>();

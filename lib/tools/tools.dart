@@ -75,6 +75,28 @@ class Tools {
       return new DateTime(2000);
     }
   }
+
+  static String dateToString(DateTime date){
+    if (date == null) return "Erreur date";
+    String jour;
+    String mois;
+    String annee;
+    date.day != null?jour = date.day.toString():jour = "xx";
+    date.month != null?mois = date.month.toString():mois = "xx";
+    date.year != null?annee = date.year.toString():annee = "xx";
+
+    return "$jour/$mois/$annee";
+  }
+
+  static String heureToString(DateTime date){
+    if (date == null) return "Erreur heure";
+    String heure;
+    String minute;
+    date.day != null?heure = date.hour.toString():heure = "xx";
+    date.minute != null?minute = date.minute.toString():minute = "xx";
+
+    return "${heure}h$minute";
+  }
 }
 
 class ReusableWidgets {

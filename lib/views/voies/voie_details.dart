@@ -13,11 +13,11 @@ class VoieDetails extends StatelessWidget {
     // Use the Todo to create the UI.
     return Scaffold(
       appBar: AppBar(
-        title: Text(voie.nom),
+        title: Text(voie.nom == null?"Sans nom":voie.nom),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Text(voie.commentaire),
+        child: Text(voie.commentaire== null?"":voie.commentaire),
       ),
     );
   }

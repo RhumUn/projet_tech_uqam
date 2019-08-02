@@ -48,7 +48,6 @@ class SeanceListState extends State<SeanceList> {
 
   ListView getSeanceListView() {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
-
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
@@ -61,8 +60,8 @@ class SeanceListState extends State<SeanceList> {
               style: titleStyle,
             ),
             subtitle: Text(
-              "Date : ${this.seanceList[position].date.day}-${this.seanceList[position].date.month}-${this.seanceList[position].date.year} "
-              "${this.seanceList[position].heureDebut.hour}h${this.seanceList[position].heureDebut.minute}",
+              "Date : ${Tools.dateToString(this.seanceList[position].date)} - "
+              "${Tools.heureToString(this.seanceList[position].heureDebut)}",
             ),
             trailing: GestureDetector(
               child: Icon(

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/tools/tools.dart';
-import 'package:flutter_uqam/views/routes/voie_ajouter.dart';
-import 'package:flutter_uqam/views/routes/voie_details.dart';
+import 'package:flutter_uqam/views/voies/voie_details.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';
 
@@ -29,7 +28,7 @@ class VoieListState extends State<VoieList> {
 
     return Scaffold(
       body: getVoieListView(),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('FAB clicked');
           Navigator.of(context)
@@ -43,7 +42,7 @@ class VoieListState extends State<VoieList> {
         },
         tooltip: 'Add Voie',
         child: Icon(Icons.add),
-      ),
+      ),*/
     );
   }
 

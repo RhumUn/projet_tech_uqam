@@ -52,6 +52,7 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
     List<Widget> formWidget = new List();
 
     formWidget.add(new TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       decoration: const InputDecoration(
         icon: const Icon(Icons.create),
         hintText: 'Entrez le nom de la séance',
@@ -140,6 +141,7 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
     ]));
 
     formWidget.add(new TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       decoration: const InputDecoration(
         icon: const Icon(Icons.place),
         hintText: 'Entrez le lieu de la séance',
@@ -149,6 +151,7 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
     ));
 
     formWidget.add(new TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: TextInputType.multiline,
       maxLines: null,
       decoration: InputDecoration(

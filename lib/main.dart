@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       title: 'MontBloc',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: HomePage(),
     );

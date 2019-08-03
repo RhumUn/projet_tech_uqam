@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text('MontBloc'),
           bottom: TabBar(
             tabs: <Widget>[

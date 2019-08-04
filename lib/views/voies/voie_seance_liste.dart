@@ -1,20 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
-import 'package:flutter_uqam/models/data/VoieData.dart';
+import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:flutter_uqam/tools/tools.dart';
+import 'package:flutter_uqam/views/voies/voie_ajouter.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';
 
-class VoieList extends StatefulWidget {
+class VoieSeanceList extends StatefulWidget {
+  final Seance seance;
+
+  VoieSeanceList({Key key, @required this.seance}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    return VoieListState();
+    return VoieSeanceListState();
   }
 }
 
-class VoieListState extends State<VoieList> {
+class VoieSeanceListState extends State<VoieSeanceList> {
   List<Voie> voieList;
   int count = 0;
 
@@ -27,12 +33,12 @@ class VoieListState extends State<VoieList> {
 
     return Scaffold(
       body: ReusableWidgets.getVoieListView(voieList),
-      /*floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('FAB clicked');
           Navigator.of(context)
               .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new AjouterVoieForm();
+            return new AjouterVoieForm(seance: widget.seance);
           })).then((value) {
             setState(() {
               updateListView();
@@ -41,7 +47,7 @@ class VoieListState extends State<VoieList> {
         },
         tooltip: 'Add Voie',
         child: Icon(Icons.add),
-      ),*/
+      ),
     );
   }
 
@@ -58,11 +64,11 @@ class VoieListState extends State<VoieList> {
   void updateListView() {
     final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();
     dbFuture.then((database) {
-      Future<List<Voie>> voieListFuture = VoieData.getVoieList();
+      Future<List<Voie>> voieListFuture = SeanceVoieData.getSeanceVoieList(widget.seance.id);
       voieListFuture.then((voieList) {
         setState(() {
-          this.voieList = voieList;
-          this.count = voieList.length;
+          voieList != null?this.voieList = voieList:this.voieList = List<Voie>();
+          this.count = this.voieList.length;
         });
       });
     });

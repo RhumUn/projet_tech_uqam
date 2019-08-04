@@ -41,6 +41,13 @@ class VoieData {
     return result;
   }
 
+  static Future<Voie> getVoieById() async {
+    db = await databaseHelper.database;
+    var result = await db.query(voieTable);
+    Voie voie = Voie.fromMapObject(result.first);
+    return voie;
+  }
+
   static Future<int> insertVoie(Voie voie) async {
     db = await databaseHelper.database;
     var result = await db.insert(voieTable, voie.toMap());

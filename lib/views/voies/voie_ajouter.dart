@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_uqam/database_helper.dart';
+import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
+import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/tools/tools.dart';
+import 'package:sqflite/sqflite.dart';
 
 // Create a Form widget.
 class AjouterVoieForm extends StatefulWidget {
+  final Seance seance;
+
+  AjouterVoieForm({Key key, @required this.seance}) : super(key: key);
+
   @override
   AjouterVoieFormState createState() => new AjouterVoieFormState();
 }
@@ -20,7 +28,11 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
   final commentaireController = TextEditingController();
 
   final List<String> _colors = <String>['Rouge', 'Vert', 'Bleu', 'Orange'];
-  final List<String> _typesValidation = <String>['A vue', 'Flash', 'Avec essais'];
+  final List<String> _typesValidation = <String>[
+    'A vue',
+    'Flash',
+    'Avec essais'
+  ];
   final List<String> _difficuties = <String>[
     'V0',
     'V1',
@@ -63,7 +75,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
 
-
     formWidget.add(new TextFormField(
       decoration: const InputDecoration(
         icon: const Icon(Icons.create),
@@ -74,14 +85,13 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     ));
 
     formWidget.add(new TextFormField(
-      decoration: const InputDecoration(
-        icon: const Icon(Icons.category),
-        hintText: 'Entrez le nombre de prises',
-        labelText: 'Nombre de prises',
-      ),
-      keyboardType: TextInputType.number,
-      controller: nbPrisesController
-    ));
+        decoration: const InputDecoration(
+          icon: const Icon(Icons.category),
+          hintText: 'Entrez le nombre de prises',
+          labelText: 'Nombre de prises',
+        ),
+        keyboardType: TextInputType.number,
+        controller: nbPrisesController));
 
     formWidget.add(SwitchListTile(
         title: const Text('Voie validée ?'),
@@ -143,9 +153,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        child: Text(value)
-                        ),
+                      Container(child: Text(value)),
                       Container(
                         child: Icon(
                           Tools.getIconTypeValidation(value),
@@ -153,8 +161,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
                         ),
                       ),
                     ],
-                  )
-                  ,
+                  ),
                 );
               }).toList(),
             ),
@@ -208,10 +215,20 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
             voie.nom = nomController.text;
             voie.commentaire = commentaireController.text;
             voie.nombre_prise = int.parse(nbPrisesController.text);
-            VoieData.insertVoie(voie);
+            addSeanceVoie();
             Navigator.pop(context);
           },
         )));
     return formWidget;
+  }
+
+  void addSeanceVoie() {
+    final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();
+    dbFuture.then((database) {
+      Future<int> idVoieFuture = VoieData.insertVoie(voie);
+      idVoieFuture.then((idVoie) {
+        SeanceVoieData.insertSeanceVoie(widget.seance.id, idVoie);
+      });
+    });
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_uqam/models/bussiness/Voie.dart';
+import 'package:flutter_uqam/views/voies/voie_details.dart';
 
 class Tools {
   static int boolToInt(bool value) {
@@ -116,6 +118,54 @@ class ReusableWidgets {
       backgroundColor:
           Tools.getDifficultyColor(Tools.getDifficultyValue(difficulty)),
       child: Text(difficulty),
+    );
+  }
+
+  static ListView getVoieListView(List<Voie> voies) {
+    return ListView.builder(
+      itemCount: voies.length,
+      itemBuilder: (BuildContext context, int position) {
+        return Card(
+          color: Colors.white,
+          elevation: 2.0,
+          child: ListTile(
+            leading: ReusableWidgets.getDifficultyTag(
+                voies[position].difficulte),
+            title: Text(
+              voies[position].nom == null
+                  ? "Sans nom"
+                  : voies[position].nom,
+            ),
+            subtitle: Text("${voies[position].nombre_prise} prise(s)"),
+/*            trailing: GestureDetector(
+              child: Icon(
+                Icons.delete,
+                color: Colors.grey,
+              ),
+              onTap: () {
+                _delete(context, voieList[position]);
+              },
+            ),*/
+            trailing: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(Tools.getIconTypeValidation(
+                    voies[position].typeValidation)),
+                Icon(Tools.getIconEtatValidation(
+                    Tools.intToBool(voies[position].etat))),
+              ],
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VoieDetails(voie: voies[position]),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

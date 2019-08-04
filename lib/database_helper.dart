@@ -1,3 +1,4 @@
+import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/models/data/SeanceData.dart';
@@ -36,7 +37,7 @@ class DatabaseHelper {
     String path = directory.path + _databaseName;
 
     // Open/create the database at a given path
-    var notesDatabase = await openDatabase(path, version: 9, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    var notesDatabase = await openDatabase(path, version: 14, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return notesDatabase;
   }
 
@@ -44,10 +45,13 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute(VoieData.createTableScript);
     await db.execute(SeanceData.createTableScript);
+    await db.execute(SeanceVoieData.createTableScript);
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
+      db.execute("DROP TABLE ${SeanceVoieData.seance_voieTable}");
+      db.execute(SeanceVoieData.createTableScript);
     }
   }
 }

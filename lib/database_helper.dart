@@ -37,7 +37,7 @@ class DatabaseHelper {
     String path = directory.path + _databaseName;
 
     // Open/create the database at a given path
-    var notesDatabase = await openDatabase(path, version: 15, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    var notesDatabase = await openDatabase(path, version: 16, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return notesDatabase;
   }
 
@@ -50,8 +50,7 @@ class DatabaseHelper {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      //db.execute("DROP TABLE ${SeanceVoieData.seance_voieTable}");
-      db.execute(SeanceVoieData.createTableScript);
+      db.execute("ALTER TABLE ${VoieData.voieTable} ADD COLUMN ${VoieData.colonneNbEssais} Integer");
     }
   }
 }

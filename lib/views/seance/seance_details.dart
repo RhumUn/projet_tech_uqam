@@ -1,31 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
+import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 import 'package:flutter_uqam/views/voies/voie_seance_liste.dart';
+import 'package:sqflite/sqflite.dart';
 
-class SeanceDetails extends StatelessWidget {
+import '../../database_helper.dart';
+
+class SeanceDetails extends StatefulWidget {
   final Seance seance;
 
   SeanceDetails({Key key, @required this.seance}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return SeanceDetailsState();
+  }
+}
+
+class SeanceDetailsState extends State<SeanceDetails> {
+  @override
   Widget build(BuildContext context) {
-    //List<Voie> voies = SeanceVoieData.getSeanceVoieList(seance.id);
+    final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<Voie>> idVoieFuture = widget.seance.getFutureVoieList();
+      idVoieFuture.then((listVoie) {
+        setState(() {
+          widget.seance.voieList = listVoie;
+        });
+      });
+    });
     return Scaffold(
-      appBar: ReusableWidgets.getAppBar(seance.nom),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      appBar: ReusableWidgets.getAppBar(widget.seance.nom),
+      body: ListView(
+        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ListView(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            children: getSeanceDetails(this.seance),
+            children: getSeanceDetails(widget.seance),
           ),
-          Text('Voies'),
+          Text(
+            '${widget.seance.voieList.length} voie(s)',
+            textAlign: TextAlign.center,
+          ),
           SizedBox(
             height: 300.0,
-            child: VoieSeanceList(seance: this.seance),
+            child: VoieSeanceList(seance: widget.seance),
           ),
         ],
       ),
@@ -34,6 +56,9 @@ class SeanceDetails extends StatelessWidget {
 
   static List<Widget> getSeanceDetails(Seance seance) {
     var widgets = List<Widget>();
+    bool showDuree = seance.heureDebut != null &&
+        seance.heureFin != null &&
+        seance.heureFin != DateTime(2000, 1, 1);
 
     widgets.add(ListTile(
       leading: Container(
@@ -55,6 +80,19 @@ class SeanceDetails extends StatelessWidget {
           ? "Heure de fin : Inconnue"
           : "Heure de fin: ${Tools.heureToString(seance.heureFin)}"),
     ));
+
+    widgets.add(Visibility(
+        child: ListTile(
+          leading: Container(
+            width: 40,
+            alignment: Alignment.center,
+            child: Icon(Icons.timelapse),
+          ),
+          title: Text(
+            showDuree ? "Durée: ${seance.dureeSeance()}" : "",
+          ),
+        ),
+        visible: showDuree));
 
     widgets.add(ListTile(
       leading: Container(

@@ -22,7 +22,7 @@ class SeanceVoieData {
       int seanceId) async {
     db = await databaseHelper.database;
     String query =
-        """SELECT ${VoieData.colonnePkId}, ${VoieData.colonneCouleur}, ${VoieData.colonneEtat}, ${VoieData.colonneCommentaire}, ${VoieData.colonneNom}, ${VoieData.colonneNbPrise}, ${VoieData.colonneFkDifficulte}, ${VoieData.colonneFkTypeValidation}
+        """SELECT ${VoieData.colonnePkId}, ${VoieData.colonneCouleur}, ${VoieData.colonneEtat}, ${VoieData.colonneNbEssais}, ${VoieData.colonneCommentaire}, ${VoieData.colonneNom}, ${VoieData.colonneNbPrise}, ${VoieData.colonneFkDifficulte}, ${VoieData.colonneFkTypeValidation}
          FROM Voie JOIN $seance_voieTable ON ${VoieData.voieTable}.id == $seance_voieTable.$colonneFkVoieId WHERE $colonneFkSeanceId = $seanceId""";
     List<Map<String, dynamic>> result = await db.rawQuery(query);
 

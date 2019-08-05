@@ -27,6 +27,8 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
   final nomController = TextEditingController();
   final nbPrisesController = TextEditingController();
   final commentaireController = TextEditingController();
+  final nbEssaisController = TextEditingController();
+
 
   final List<String> _colors = <String>['Rouge', 'Vert', 'Bleu', 'Orange'];
   final List<String> _typesValidation = <String>[
@@ -70,6 +72,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     nomController.dispose();
     nbPrisesController.dispose();
     commentaireController.dispose();
+    nbEssaisController.dispose();
     super.dispose();
   }
 
@@ -100,48 +103,60 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         secondary: const Icon(Icons.check),
         onChanged: (bool val) {
           setState(() => voie.etat = val);
-          formWidget.add(new FormField(
-            builder: (FormFieldState state) {
-              return InputDecorator(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.playlist_add_check),
-                  labelText: 'Type de validation',
-                ),
-                child: new DropdownButtonHideUnderline(
-                  child: new DropdownButton(
-                    value: voie.typeValidation,
-                    isDense: true,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        //newContact.favoriteColor = newValue;
-                        voie.typeValidation = newValue;
-                        state.didChange(newValue);
-                      });
-                    },
-                    items: _typesValidation.map((String value) {
-                      return new DropdownMenuItem(
-                        value: value,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(child: Text(value)),
-                            Container(
-                              child: Icon(
-                                Tools.getIconTypeValidation(value),
-                                color: Colors.blue[500],
-                              ),
+        }));
+
+    formWidget.add(Visibility(
+        child: new FormField(
+          builder: (FormFieldState state) {
+            return InputDecorator(
+              decoration: InputDecoration(
+                icon: const Icon(Icons.playlist_add_check),
+                labelText: 'Type de validation',
+              ),
+              child: new DropdownButtonHideUnderline(
+                child: new DropdownButton(
+                  value: voie.typeValidation,
+                  isDense: true,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      voie.typeValidation = newValue;
+                      state.didChange(newValue);
+                    });
+                  },
+                  items: _typesValidation.map((String value) {
+                    return new DropdownMenuItem(
+                      value: value,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(child: Text(value)),
+                          Container(
+                            child: Icon(
+                              Tools.getIconTypeValidation(value),
+                              color: Colors.blue[500],
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
-              );
-            },
-          ));
-        }
-    ));
+              ),
+            );
+          },
+        ),
+        visible: voie.etat));
+
+    formWidget.add(Visibility(
+        child: new TextFormField(
+            decoration: const InputDecoration(
+              icon: const Icon(Icons.category),
+              hintText: "Entrez le nombre d'essais",
+              labelText: "Nombre d'essais",
+            ),
+            keyboardType: TextInputType.number,
+            controller: nbEssaisController),
+        visible: voie.typeValidation == "Avec essais" && voie.etat));
 
     formWidget.add(new FormField(
       builder: (FormFieldState state) {
@@ -171,8 +186,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         );
       },
     ));
-
-
 
     formWidget.add(new FormField(
       builder: (FormFieldState state) {
@@ -218,7 +231,8 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
           onPressed: () {
             voie.nom = nomController.text;
             voie.commentaire = commentaireController.text;
-            voie.nombre_prise = int.parse(nbPrisesController.text);
+            voie.nombre_prise = int.tryParse(nbPrisesController.text);
+            voie.nombreEssais = int.tryParse(nbEssaisController.text);
             addSeanceVoie();
             Navigator.pop(context);
           },

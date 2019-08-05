@@ -54,11 +54,7 @@ class ReusableWidgets {
             ),*/
             trailing: new Row(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Tools.getIconTypeValidation(
-                    voies[position].typeValidation)),
-                Icon(Tools.getIconEtatValidation(voies[position].etat)),
-              ],
+              children: getValidationIcons(voies[position]),
             ),
             onTap: () {
               Navigator.push(
@@ -74,6 +70,16 @@ class ReusableWidgets {
     );
   }
 
+  static List<Widget> getValidationIcons(Voie voie) {
+    var widgetList = new List<Widget>();
+
+    if (voie.etat){
+        widgetList.add(Icon(Tools.getIconTypeValidation(voie.typeValidation)));
+    }
+    widgetList.add(Icon(Tools.getIconEtatValidation(voie.etat)));
+    return widgetList;
+  }
+
   static getValidationWidget(Voie voie) {
     if (voie.etat) {
       return ListTile(
@@ -83,7 +89,7 @@ class ReusableWidgets {
           child: Icon(Tools.getIconEtatValidation(voie.etat)),
         ),
         title: Text(Tools.getEtatValidationText(voie.etat)),
-        subtitle: voie.nombreEssais != 0 ? Text("${voie.typeValidation}: ${voie.nombreEssais} essais"):Text(voie.typeValidation),
+        subtitle: voie.nombreEssais != 0 && voie.nombreEssais != null ? Text("${voie.typeValidation}: ${voie.nombreEssais} essais"):Text(voie.typeValidation),
         trailing: Icon(Tools.getIconTypeValidation(voie.typeValidation)),
       );
     } else {

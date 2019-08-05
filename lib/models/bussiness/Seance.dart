@@ -1,4 +1,7 @@
 import 'package:flutter_uqam/models/data/SeanceData.dart';
+import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
+import 'package:flutter_uqam/tools/tools.dart';
+import 'Voie.dart';
 
 class Seance {
   int _id;
@@ -8,6 +11,7 @@ class Seance {
   DateTime _heureFin;
   String _lieu;
   String _commentaire;
+  List<Voie> voieList = new List<Voie>();
 
   Seance();
 
@@ -58,6 +62,11 @@ class Seance {
     _id = value;
   }
 
+  Future<List<Voie>> getFutureVoieList(){
+      Future<List<Voie>> voieListFuture = SeanceVoieData.getSeanceVoieList(this.id);
+      return voieListFuture;
+  }
+
   String get commentaire => _commentaire;
 
   set commentaire(String value) {
@@ -81,4 +90,8 @@ class Seance {
     _heureFin = value;
   }
 
+  String dureeSeance(){
+    Duration duree = this._heureFin.difference(this._heureDebut);
+    return Tools.dureeToString(duree);
+  }
 }

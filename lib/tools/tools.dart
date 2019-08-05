@@ -97,4 +97,14 @@ class Tools {
 
     return "${heure}h$minute";
   }
+
+  static String dureeToString(Duration duree){
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duree.inMinutes.remainder(60));
+    return "${twoDigits(duree.inHours)}:$twoDigitMinutes";
+  }
 }

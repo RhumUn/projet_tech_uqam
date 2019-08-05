@@ -4,10 +4,17 @@ import 'package:flutter_uqam/tools/tools.dart';
 class Voie {
   int _id;
   int _nombre_prise;
-  int _etat = Tools.boolToInt(false);
-  String _video;
-  String _couleur;
-  String _commentaire;
+  bool _etat = false;
+  String _video = "";
+  String _couleur = "";
+  String _commentaire = "";
+  int _nombreEssais = 0;
+
+  int get nombreEssais => _nombreEssais;
+
+  set nombreEssais(int value) {
+    _nombreEssais = value;
+  }
 
   set nom(String value) {
     _nom = value;
@@ -34,10 +41,11 @@ class Voie {
     this._id = map[VoieData.colonnePkId];
     this._nom = map[VoieData.colonneNom];
     this._nombre_prise = map[VoieData.colonneNbPrise];
-    this._etat = map[VoieData.colonneEtat];
+    this._etat = Tools.intToBool(map[VoieData.colonneEtat]);
     this._video = map[VoieData.colonneVideo];
     this._couleur = map[VoieData.colonneCouleur];
     this._commentaire = map[VoieData.colonneCommentaire];
+    this._nombreEssais = map[VoieData.colonneNbEssais];
     this._image = map[VoieData.colonneImage];
     this._typeValidation = map[VoieData.colonneFkTypeValidation];
     this._difficulte = map[VoieData.colonneFkDifficulte];
@@ -51,7 +59,8 @@ class Voie {
     }
     map[VoieData.colonneNom] = this._nom;
     map[VoieData.colonneNbPrise] = this._nombre_prise;
-    map[VoieData.colonneEtat] = this._etat;
+    map[VoieData.colonneNbEssais] = this._nombreEssais;
+    map[VoieData.colonneEtat] = Tools.boolToInt(this._etat);
     map[VoieData.colonneVideo] = this._video;
     map[VoieData.colonneCouleur] = this._couleur;
     map[VoieData.colonneCommentaire] = this._commentaire;
@@ -111,9 +120,9 @@ class Voie {
     _video = value;
   }
 
-  int get etat => _etat;
+  bool get etat => _etat;
 
-  set etat(int value) {
+  set etat(bool value) {
     _etat = value;
   }
 
@@ -127,20 +136,6 @@ class Voie {
 
   set id(int value) {
     _id = value;
-  }
-
-  bool getEtat() {
-    switch (this.etat) {
-      case 0:
-        return false;
-        break;
-      case 1:
-        return true;
-        break;
-      default:
-        return false;
-        break;
-    }
   }
 
   String get nom {

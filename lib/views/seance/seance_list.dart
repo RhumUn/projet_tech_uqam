@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/data/SeanceData.dart';
+import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 import 'package:flutter_uqam/views/Seance/seance_ajouter.dart';
 import 'package:flutter_uqam/views/seance/seance_details.dart';

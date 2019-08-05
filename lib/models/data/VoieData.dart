@@ -11,6 +11,7 @@ class VoieData {
   static final String colonneVideo = "video";
   static final String colonneCouleur = "couleur";
   static final String colonneCommentaire = "commentaire";
+  static final String colonneNbEssais = "nombre_essais";
   static final String colonneImage = "image";
   static final String colonneNom = "nom";
   static final String colonneFkTypeValidation = "id_TypeValidation";
@@ -24,6 +25,7 @@ class VoieData {
     CREATE TABLE $voieTable(
         $colonnePkId              Integer  PRIMARY KEY Autoincrement  NOT NULL ,
         $colonneNbPrise           Integer,
+        $colonneNbEssais          Integer,
         $colonneEtat              Bool NOT NULL ,
         $colonneVideo             Varchar (150),
         $colonneCouleur           Varchar (50),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
-import 'package:flutter_uqam/tools/tools.dart';
+import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';
 
@@ -27,24 +27,8 @@ class VoieListState extends State<VoieList> {
 
     return Scaffold(
       body: ReusableWidgets.getVoieListView(voieList),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          debugPrint('FAB clicked');
-          Navigator.of(context)
-              .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new AjouterVoieForm();
-          })).then((value) {
-            setState(() {
-              updateListView();
-            });
-          });
-        },
-        tooltip: 'Add Voie',
-        child: Icon(Icons.add),
-      ),*/
     );
   }
-
 
 
  /* void _delete(BuildContext context, Voie voie) async {

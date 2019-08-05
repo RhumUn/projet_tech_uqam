@@ -5,6 +5,7 @@ import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
+import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -95,10 +96,52 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
 
     formWidget.add(SwitchListTile(
         title: const Text('Voie validée ?'),
-        value: false,
+        value: voie.etat,
         secondary: const Icon(Icons.check),
-        onChanged: (bool val) =>
-            setState(() => voie.etat = Tools.boolToInt(val))));
+        onChanged: (bool val) {
+          setState(() => voie.etat = val);
+          formWidget.add(new FormField(
+            builder: (FormFieldState state) {
+              return InputDecorator(
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.playlist_add_check),
+                  labelText: 'Type de validation',
+                ),
+                child: new DropdownButtonHideUnderline(
+                  child: new DropdownButton(
+                    value: voie.typeValidation,
+                    isDense: true,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        //newContact.favoriteColor = newValue;
+                        voie.typeValidation = newValue;
+                        state.didChange(newValue);
+                      });
+                    },
+                    items: _typesValidation.map((String value) {
+                      return new DropdownMenuItem(
+                        value: value,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(child: Text(value)),
+                            Container(
+                              child: Icon(
+                                Tools.getIconTypeValidation(value),
+                                color: Colors.blue[500],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+            },
+          ));
+        }
+    ));
 
     formWidget.add(new FormField(
       builder: (FormFieldState state) {
@@ -129,46 +172,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       },
     ));
 
-    formWidget.add(new FormField(
-      builder: (FormFieldState state) {
-        return InputDecorator(
-          decoration: InputDecoration(
-            icon: const Icon(Icons.playlist_add_check),
-            labelText: 'Type de validation',
-          ),
-          child: new DropdownButtonHideUnderline(
-            child: new DropdownButton(
-              value: voie.typeValidation,
-              isDense: true,
-              onChanged: (String newValue) {
-                setState(() {
-                  //newContact.favoriteColor = newValue;
-                  voie.typeValidation = newValue;
-                  state.didChange(newValue);
-                });
-              },
-              items: _typesValidation.map((String value) {
-                return new DropdownMenuItem(
-                  value: value,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(child: Text(value)),
-                      Container(
-                        child: Icon(
-                          Tools.getIconTypeValidation(value),
-                          color: Colors.blue[500],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    ));
+
 
     formWidget.add(new FormField(
       builder: (FormFieldState state) {
@@ -179,7 +183,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
-              value: voie.couleur,
+              value: _colors[0],
               isDense: true,
               onChanged: (String newValue) {
                 setState(() {

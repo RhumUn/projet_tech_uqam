@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_uqam/models/bussiness/Voie.dart';
-import 'package:flutter_uqam/views/voies/voie_details.dart';
 
 class Tools {
   static int boolToInt(bool value) {
@@ -8,7 +6,6 @@ class Tools {
   }
 
   static bool intToBool(int value) {
-
     return value == 1 ? true : false;
   }
 
@@ -35,11 +32,6 @@ class Tools {
     return int.tryParse(difficulty);
   }
 
-  static List<Widget> getDifficultyTagList(List<String> _difficuties) {
-    _difficuties
-        .forEach((difficulty) => ReusableWidgets.getDifficultyTag(difficulty));
-  }
-
   static IconData getIconTypeValidation(String typeValidation) {
     switch (typeValidation) {
       case "A vue":
@@ -61,14 +53,20 @@ class Tools {
     return value;
   }
 
+  static String getEtatValidationText(bool etat) {
+    String value;
+    etat ? value = "Validée" : value = "Non validée";
+    return value;
+  }
+
   static parseHourToDatetime(String heureMinutes) {
     List<String> heureSplit = heureMinutes.split(':');
     int heure;
     int minute;
 
-    if (heureSplit.length > 1){
-       heure = int.tryParse(heureSplit[0]);
-       minute = int.tryParse(heureSplit[1]);
+    if (heureSplit.length > 1) {
+      heure = int.tryParse(heureSplit[0]);
+      minute = int.tryParse(heureSplit[1]);
     }
 
     if (heure != null && minute != null) {
@@ -78,94 +76,25 @@ class Tools {
     }
   }
 
-  static String dateToString(DateTime date){
+  static String dateToString(DateTime date) {
     if (date == null) return "Erreur date";
     String jour;
     String mois;
     String annee;
-    date.day != null?jour = date.day.toString():jour = "xx";
-    date.month != null?mois = date.month.toString():mois = "xx";
-    date.year != null?annee = date.year.toString():annee = "xx";
+    date.day != null ? jour = date.day.toString() : jour = "xx";
+    date.month != null ? mois = date.month.toString() : mois = "xx";
+    date.year != null ? annee = date.year.toString() : annee = "xx";
 
     return "$jour/$mois/$annee";
   }
 
-  static String heureToString(DateTime date){
+  static String heureToString(DateTime date) {
     if (date == null) return "Erreur heure";
     String heure;
     String minute;
-    date.day != null?heure = date.hour.toString():heure = "xx";
-    date.minute != null?minute = date.minute.toString():minute = "xx";
+    date.day != null ? heure = date.hour.toString() : heure = "xx";
+    date.minute != null ? minute = date.minute.toString() : minute = "xx";
 
     return "${heure}h$minute";
-  }
-}
-
-class ReusableWidgets {
-  static getAppBar(String title) {
-    return AppBar(
-      title: Text(title),
-    );
-  }
-
-  static void showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  static Widget getDifficultyTag(String difficulty) {
-    return CircleAvatar(
-      backgroundColor:
-          Tools.getDifficultyColor(Tools.getDifficultyValue(difficulty)),
-      child: Text(difficulty),
-    );
-  }
-
-  static ListView getVoieListView(List<Voie> voies) {
-    return ListView.builder(
-      itemCount: voies.length,
-      itemBuilder: (BuildContext context, int position) {
-        return Card(
-          color: Colors.white,
-          elevation: 2.0,
-          child: ListTile(
-            leading: ReusableWidgets.getDifficultyTag(
-                voies[position].difficulte),
-            title: Text(
-              voies[position].nom == null
-                  ? "Sans nom"
-                  : voies[position].nom,
-            ),
-            subtitle: Text("${voies[position].nombre_prise} prise(s)"),
-/*            trailing: GestureDetector(
-              child: Icon(
-                Icons.delete,
-                color: Colors.grey,
-              ),
-              onTap: () {
-                _delete(context, voieList[position]);
-              },
-            ),*/
-            trailing: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Tools.getIconTypeValidation(
-                    voies[position].typeValidation)),
-                Icon(Tools.getIconEtatValidation(
-                    Tools.intToBool(voies[position].etat))),
-              ],
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VoieDetails(voie: voies[position]),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
   }
 }

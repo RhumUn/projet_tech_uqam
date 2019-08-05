@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
-import 'package:flutter_uqam/tools/tools.dart';
+import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/views/voies/voie_ajouter.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';

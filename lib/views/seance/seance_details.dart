@@ -34,7 +34,8 @@ class SeanceDetailsState extends State<SeanceDetails> {
     return Scaffold(
       appBar: ReusableWidgets.getAppBar(widget.seance.nom),
       body: ListView(
-        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         children: [
           ListView(
             scrollDirection: Axis.vertical,

@@ -30,7 +30,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
   final nbEssaisController = TextEditingController();
 
 
-  final List<String> _colors = <String>['Rouge', 'Vert', 'Bleu', 'Orange'];
+  final List<String> _colors = <String>['Rouges', 'Vertes', 'Bleues', 'Oranges', 'Mauves', 'Marbrées', 'Noires', 'Blanches'];
   final List<String> _typesValidation = <String>[
     'A vue',
     'Flash',
@@ -85,6 +85,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         hintText: 'Entrez le nom de la voie',
         labelText: 'Nom',
       ),
+      textCapitalization: TextCapitalization.sentences,
       controller: nomController,
     ));
 
@@ -92,10 +93,17 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         decoration: const InputDecoration(
           icon: const Icon(Icons.category),
           hintText: 'Entrez le nombre de prises',
-          labelText: 'Nombre de prises',
+          labelText: 'Nombre de prises *',
         ),
         keyboardType: TextInputType.number,
-        controller: nbPrisesController));
+        // ignore: missing_return
+        validator: (String value){
+          if(value.isEmpty){
+            return "Veuillez entrer un nombre de prises";
+          }
+        },
+        controller: nbPrisesController,
+    ));
 
     formWidget.add(SwitchListTile(
         title: const Text('Voie validée ?'),
@@ -150,11 +158,20 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     formWidget.add(Visibility(
         child: new TextFormField(
             decoration: const InputDecoration(
-              icon: const Icon(Icons.category),
+              icon: const Icon(Icons.replay),
               hintText: "Entrez le nombre d'essais",
               labelText: "Nombre d'essais",
             ),
             keyboardType: TextInputType.number,
+            // ignore: missing_return
+            validator: (String value){
+              if(voie.typeValidation == "Avec essais" && voie.etat && value.isEmpty){
+                return "Veuillez entrer un nombre d'essais.";
+              }
+              if(value == "0"){
+                return "Veuillez entrer un nombre d'essais cohérent.";
+              }
+            },
             controller: nbEssaisController),
         visible: voie.typeValidation == "Avec essais" && voie.etat));
 
@@ -163,7 +180,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: const Icon(Icons.whatshot),
-            labelText: 'Difficulté',
+            labelText: 'Difficulté *',
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
@@ -192,7 +209,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: const Icon(Icons.color_lens),
-            labelText: 'Couleur',
+            labelText: 'Couleur des prises *',
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
@@ -219,6 +236,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
     formWidget.add(new TextFormField(
       keyboardType: TextInputType.multiline,
       maxLines: null,
+      textCapitalization: TextCapitalization.sentences,
       controller: commentaireController,
       decoration: InputDecoration(
           icon: const Icon(Icons.comment), labelText: 'Ecrivez un commentaire'),
@@ -229,12 +247,14 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
         child: new RaisedButton(
           child: const Text('Valider'),
           onPressed: () {
-            voie.nom = nomController.text;
-            voie.commentaire = commentaireController.text;
-            voie.nombre_prise = int.tryParse(nbPrisesController.text);
-            voie.nombreEssais = int.tryParse(nbEssaisController.text);
-            addSeanceVoie();
-            Navigator.pop(context);
+            if (_formKey.currentState.validate()) {
+              voie.nom = nomController.text;
+              voie.commentaire = commentaireController.text;
+              voie.nombre_prise = int.tryParse(nbPrisesController.text);
+              voie.nombreEssais = int.tryParse(nbEssaisController.text);
+              addSeanceVoie();
+              Navigator.pop(context);
+            }
           },
         )));
     return formWidget;

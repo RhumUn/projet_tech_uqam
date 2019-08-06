@@ -47,7 +47,7 @@ class SeanceDetailsState extends State<SeanceDetails> {
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 300.0,
+            height: 250.0, //TODO : Non dynamique
             child: VoieSeanceList(seance: widget.seance),
           ),
         ],

@@ -8,20 +8,25 @@ import 'package:flutter_uqam/tools/tools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-class AjouterSeanceForm extends StatefulWidget {
+class ModifierSeanceForm extends StatefulWidget {
+  final Seance seance;
+
+  ModifierSeanceForm({Key key, @required this.seance}) : super(key: key);
+
   @override
-  AjouterSeanceFormState createState() => new AjouterSeanceFormState();
+  ModifierSeanceFormState createState() => new ModifierSeanceFormState();
 }
 
-class AjouterSeanceFormState extends State<AjouterSeanceForm> {
+class ModifierSeanceFormState extends State<ModifierSeanceForm> {
   final _formKey = GlobalKey<FormState>();
-  final seance = Seance();
   final nomController = TextEditingController();
   final dateController = TextEditingController();
   final heureDebutController = TextEditingController();
   final heureFinController = TextEditingController();
   final lieuController = TextEditingController();
   final commentaireController = TextEditingController();
+  final formatDate = DateFormat("yyyy-MM-dd");
+  final formatHeure = DateFormat("HH:mm");
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,17 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
   }
 
   @override
+  void initState() {
+    nomController.text = widget.seance.nom;
+    commentaireController.text = widget.seance.commentaire;
+    dateController.text = formatDate.format(widget.seance.date);
+    lieuController.text = widget.seance.lieu;
+    heureDebutController.text = formatHeure.format(widget.seance.heureDebut);
+    heureFinController.text = formatHeure.format(widget.seance.heureFin);
+    return super.initState();
+  }
+
+  @override
   void dispose() {
     // Clean up the controllers when the widget is disposed.
     nomController.dispose();
@@ -49,9 +65,6 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
   }
 
   List<Widget> getFormWidget() {
-    final formatDate = DateFormat("yyyy-MM-dd");
-    final formatHeure = DateFormat("HH:mm");
-
     List<Widget> formWidget = new List();
 
     formWidget.add(new TextFormField(
@@ -76,14 +89,13 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
           return showDatePicker(
               context: context,
               firstDate: DateTime(1950),
-              initialDate: currentValue ?? DateTime.now(),
+              initialDate: widget.seance.date ?? DateTime.now(),
               lastDate: DateTime(2100));
         },
         // ignore: missing_return
-        validator: (DateTime value) {
-          if (value == null) {
-            return 'Veuillez entrer une date';
-          }
+        validator: (v) {
+          if (dateController.text == null || dateController.text.isEmpty)
+            return "Veuillez rentrer une date";
         },
         controller: dateController,
       ),
@@ -101,7 +113,9 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
         onShowPicker: (context, currentValue) async {
           final time = await showTimePicker(
             context: context,
-            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            initialTime: widget.seance.heureDebut != null
+                ? TimeOfDay.fromDateTime(widget.seance.heureDebut)
+                : TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
             builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(alwaysUse24HourFormat: true),
@@ -110,10 +124,9 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
           return DateTimeField.convert(time);
         },
         // ignore: missing_return
-        validator: (DateTime value) {
-          if (value == null) {
-            return "Veuillez entrer une heure d'arrivée";
-          }
+        validator: (v) {
+          if (heureDebutController.text == null || heureDebutController.text.isEmpty)
+            return "Veuillez rentrer une heure de début";
         },
         controller: heureDebutController,
       ),
@@ -131,7 +144,9 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
         onShowPicker: (context, currentValue) async {
           final time = await showTimePicker(
             context: context,
-            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            initialTime: widget.seance.heureFin != null
+                ? TimeOfDay.fromDateTime(widget.seance.heureFin)
+                : TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
             builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(alwaysUse24HourFormat: true),
@@ -169,20 +184,20 @@ class AjouterSeanceFormState extends State<AjouterSeanceForm> {
           child: const Text('Enregistrer'),
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              if(nomController.text.isEmpty){
-                seance.nom = "Sans nom";
+              if (nomController.text.isEmpty) {
+                widget.seance.nom = "Sans nom";
               } else {
-                seance.nom = nomController.text;
+                widget.seance.nom = nomController.text;
               }
-              seance.date = DateTime.tryParse(dateController.text);
-              seance.heureDebut =
+              widget.seance.date = DateTime.tryParse(dateController.text);
+              widget.seance.heureDebut =
                   Tools.parseHourToDatetime(heureDebutController.text);
-              seance.heureFin =
+              widget.seance.heureFin =
                   Tools.parseHourToDatetime(heureFinController.text);
-              seance.lieu = lieuController.text;
-              seance.commentaire = commentaireController.text;
-              SeanceData.insertSeance(seance);
-              Navigator.pop(context);
+              widget.seance.lieu = lieuController.text;
+              widget.seance.commentaire = commentaireController.text;
+              SeanceData.updateSeance(widget.seance);
+              Navigator.pop(context, widget.seance);
             }
           },
         )));

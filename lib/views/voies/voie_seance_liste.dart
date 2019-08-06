@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
+import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/views/voies/voie_ajouter.dart';
 import 'package:sqflite/sqflite.dart';
@@ -32,7 +33,7 @@ class VoieSeanceListState extends State<VoieSeanceList> {
     }
 
     return Scaffold(
-      body: ReusableWidgets.getVoieListView(voieList),
+      body: ReusableWidgets.getVoieListView(voieList, _delete),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('FAB clicked');
@@ -51,15 +52,16 @@ class VoieSeanceListState extends State<VoieSeanceList> {
     );
   }
 
+  void _delete(BuildContext context, Voie voie) async {
+    int resultVoie = await VoieData.deleteVoieById(voie.id);
+    int resultVoieSeance = await SeanceVoieData.deleteVoieById(voie.id);
 
-
- /* void _delete(BuildContext context, Voie voie) async {
-    int result = await VoieData.deleteVoieById(voie.id);
-    if (result != 0) {
+    if (resultVoie != 0 && resultVoieSeance != 0) {
       ReusableWidgets.showSnackBar(context, 'Voie supprimée avec succès');
       updateListView();
     }
-  }*/
+  }
+
 
   void updateListView() {
     final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();

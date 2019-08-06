@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceData.dart';
+import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
 import 'package:flutter_uqam/views/Seance/seance_ajouter.dart';
 import 'package:flutter_uqam/views/seance/seance_details.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_uqam/database_helper.dart';
+
+enum ConfirmAction { ANNULER, VALIDER }
 
 class SeanceList extends StatefulWidget {
   @override
@@ -74,7 +77,7 @@ class SeanceListState extends State<SeanceList> {
                     ? Text(this.seanceList[position].dureeSeance())
                     : Text(Tools.heureToString(
                         this.seanceList[position].heureDebut)),
-                Text(' - ${this.seanceList[position].voieList.length}voie(s)')
+                Text(' - ${this.seanceList[position].voieList.length} voie(s)')
               ],
             ),
             trailing: GestureDetector(
@@ -83,7 +86,12 @@ class SeanceListState extends State<SeanceList> {
                 color: Colors.grey,
               ),
               onTap: () {
-                _delete(context, seanceList[position]);
+                Future<ConfirmAction> confirmFuture =
+                    _asyncConfirmDialog(context);
+                confirmFuture.then((confirm) {
+                  if (confirm == ConfirmAction.VALIDER)
+                    _delete(context, seanceList[position]);
+                });
               },
             ),
             onTap: () {
@@ -102,9 +110,11 @@ class SeanceListState extends State<SeanceList> {
   }
 
   void _delete(BuildContext context, Seance seance) async {
-    int result = await SeanceData.deleteSeanceById(seance.id);
-    if (result != 0) {
-      ReusableWidgets.showSnackBar(context, 'Séance supprimée avec succés');
+    int resultSeance = await SeanceData.deleteSeanceById(seance.id);
+    int resultSeanceVoies = await SeanceVoieData.deleteSeanceVoies(seance.id);
+
+    if (resultSeance != 0 && resultSeanceVoies != 0) {
+      ReusableWidgets.showSnackBar(context, 'Séance supprimée avec succès');
       updateListView();
     }
   }
@@ -118,7 +128,7 @@ class SeanceListState extends State<SeanceList> {
           this.seanceList = seanceList;
           this.count = seanceList.length;
         });
-        for(final seance in seanceList){
+        for (final seance in seanceList) {
           Future<List<Voie>> idVoieFuture = seance.getFutureVoieList();
           idVoieFuture.then((listVoie) {
             setState(() {
@@ -128,5 +138,33 @@ class SeanceListState extends State<SeanceList> {
         }
       });
     });
+  }
+
+  Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
+    return showDialog<ConfirmAction>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Supprimer la séance ?'),
+          content: const Text(
+              'Cela supprimera toutes les informations liées à la séance.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('ANNULER'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.ANNULER);
+              },
+            ),
+            FlatButton(
+              child: const Text('VALIDER'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.VALIDER);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }

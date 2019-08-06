@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
-import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
+import 'package:flutter_uqam/views/seance/seance_modifier.dart';
 import 'package:flutter_uqam/views/voies/voie_seance_liste.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../database_helper.dart';
 
 class SeanceDetails extends StatefulWidget {
-  final Seance seance;
+  Seance seance;
 
   SeanceDetails({Key key, @required this.seance}) : super(key: key);
 
@@ -24,15 +24,29 @@ class SeanceDetailsState extends State<SeanceDetails> {
   Widget build(BuildContext context) {
     final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();
     dbFuture.then((database) {
-      Future<List<Voie>> idVoieFuture = widget.seance.getFutureVoieList();
-      idVoieFuture.then((listVoie) {
-        setState(() {
-          widget.seance.voieList = listVoie;
+      Future<List<Voie>> voieListFuture = widget.seance.getFutureVoieList();
+      if (voieListFuture != null) {
+        voieListFuture.then((listVoie) {
+          setState(() {
+            widget.seance.voieList = listVoie;
+          });
         });
-      });
+      }
     });
     return Scaffold(
-      appBar: ReusableWidgets.getAppBar(widget.seance.nom),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(widget.seance.nom),
+        actions: <Widget>[
+          // action button
+          IconButton(
+            icon: Icon(Icons.mode_edit),
+            onPressed: () {
+              navigateToSubPage(context);
+            },
+          ),
+        ],
+      ),
       body: ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -120,5 +134,15 @@ class SeanceDetailsState extends State<SeanceDetails> {
     ));
 
     return widgets;
+  }
+
+  Future navigateToSubPage(context) async {
+    Seance seanceModifiee = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ModifierSeanceForm(seance: widget.seance)));
+    setState(() {
+      seanceModifiee ?? widget.seance;
+    });
   }
 }

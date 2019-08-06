@@ -62,6 +62,7 @@ class Seance {
     _id = value;
   }
 
+  //Todo : testUnitaire
   Future<List<Voie>> getFutureVoieList(){
       Future<List<Voie>> voieListFuture = SeanceVoieData.getSeanceVoieList(this.id);
       return voieListFuture;
@@ -90,6 +91,7 @@ class Seance {
     _heureFin = value;
   }
 
+  //Todo : test Unitaire
   String dureeSeance(){
     Duration duree = this._heureFin.difference(this._heureDebut);
     return Tools.dureeToString(duree);

@@ -43,6 +43,12 @@ class VoieData {
     return result;
   }
 
+  static Future<List<Map<String, dynamic>>> getVoieMapListOrderByDate() async {
+    db = await databaseHelper.database;
+    var result = await db.query(voieTable, orderBy: "$colonnePkId DESC");
+    return result;
+  }
+
   static Future<Voie> getVoieById(int id) async {
     db = await databaseHelper.database;
     var result = await db.query(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
@@ -80,7 +86,7 @@ class VoieData {
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Voie List' [ List<Voie> ]
   static Future<List<Voie>> getVoieList() async {
-    var voieMapList = await getVoieMapList();
+    var voieMapList = await getVoieMapListOrderByDate();
     int count = voieMapList.length;
 
     List<Voie> voieList = List<Voie>();

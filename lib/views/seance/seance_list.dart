@@ -36,7 +36,6 @@ class SeanceListState extends State<SeanceList> {
       body: getSeanceListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint('FAB clicked');
           Navigator.of(context)
               .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
             return new AjouterSeanceForm();
@@ -46,7 +45,7 @@ class SeanceListState extends State<SeanceList> {
             });
           });
         },
-        tooltip: 'Add Séance',
+        tooltip: 'Ajouter une séance',
         child: Icon(Icons.add),
       ),
     );

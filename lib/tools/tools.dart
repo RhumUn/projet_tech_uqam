@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Tools {
+  //TODO : Test Unitaire
   static int boolToInt(bool value) {
     return value ? 1 : 0;
   }
 
+  //TODO : Test Unitaire
   static bool intToBool(int value) {
     return value == 1 ? true : false;
   }
@@ -27,11 +29,12 @@ class Tools {
     }
   }
 
+  //TODO : Test Unitaire
   static int getDifficultyValue(String difficulty) {
     difficulty = difficulty.replaceAll('V', '');
     return int.tryParse(difficulty);
   }
-
+  //TODO : Test Unitaire
   static IconData getIconTypeValidation(String typeValidation) {
     switch (typeValidation) {
       case "A vue":
@@ -47,18 +50,21 @@ class Tools {
     }
   }
 
+  //TODO : Test Unitaire
   static IconData getIconEtatValidation(bool etat) {
     IconData value;
     etat ? value = Icons.check : value = Icons.close;
     return value;
   }
 
+  //TODO : Test Unitaire
   static String getEtatValidationText(bool etat) {
     String value;
     etat ? value = "Validée" : value = "Non validée";
     return value;
   }
 
+  //TODO : Test Unitaire
   static parseHourToDatetime(String heureMinutes) {
     List<String> heureSplit = heureMinutes.split(':');
     int heure;
@@ -76,6 +82,7 @@ class Tools {
     }
   }
 
+  //TODO : Test Unitaire
   static String dateToString(DateTime date) {
     if (date == null) return "Erreur date";
     String jour;
@@ -88,6 +95,7 @@ class Tools {
     return "$jour/$mois/$annee";
   }
 
+  //TODO : Test Unitaire
   static String heureToString(DateTime date) {
     if (date == null) return "Erreur heure";
     String heure;
@@ -98,6 +106,7 @@ class Tools {
     return "${heure}h$minute";
   }
 
+  //TODO : Test Unitaire
   static String dureeToString(Duration duree){
     String twoDigits(int n) {
       if (n >= 10) return "$n";

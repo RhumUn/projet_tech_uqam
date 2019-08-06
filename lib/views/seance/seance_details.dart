@@ -34,7 +34,6 @@ class SeanceDetailsState extends State<SeanceDetails> {
     return Scaffold(
       appBar: ReusableWidgets.getAppBar(widget.seance.nom),
       body: ListView(
-        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         children: [
@@ -48,7 +47,7 @@ class SeanceDetailsState extends State<SeanceDetails> {
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 300.0,
+            height: 250.0, //TODO : Non dynamique
             child: VoieSeanceList(seance: widget.seance),
           ),
         ],

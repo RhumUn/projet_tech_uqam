@@ -110,7 +110,8 @@ class VoieDetailsState extends State<VoieDetails> {
   Future navigateToSubPage(context) async {
     Voie voieModifiee = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifierVoieForm(voie: widget.voie)));
     setState(() {
-      widget.voie = voieModifiee;
+      voieModifiee ?? widget.voie;
     });
+
   }
 }

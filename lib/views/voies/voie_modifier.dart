@@ -206,7 +206,7 @@ class ModifierVoieFormState extends State<ModifierVoieForm> {
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
-              value: widget.voie.couleur,
+              value: widget.voie.couleur==null || widget.voie.couleur.isEmpty?_colors[0]:widget.voie.couleur,
               isDense: true,
               onChanged: (String newValue) {
                 setState(() {

@@ -26,7 +26,7 @@ class ModifierVoieFormState extends State<ModifierVoieForm> {
   final commentaireController = TextEditingController();
   final nbEssaisController = TextEditingController();
 
-  final List<String> _colors = <String>['Rouge', 'Vert', 'Bleu', 'Orange'];
+  final List<String> _colors = <String>['Rouges', 'Vertes', 'Bleues', 'Oranges', 'Mauves', 'Marbrées', 'Noires', 'Blanches'];
   final List<String> _typesValidation = <String>[
     'A vue',
     'Flash',
@@ -202,7 +202,7 @@ class ModifierVoieFormState extends State<ModifierVoieForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: const Icon(Icons.color_lens),
-            labelText: 'Couleur',
+            labelText: 'Couleur des prises',
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(

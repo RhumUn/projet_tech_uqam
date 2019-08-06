@@ -105,6 +105,6 @@ class Tools {
     }
 
     String twoDigitMinutes = twoDigits(duree.inMinutes.remainder(60));
-    return "${twoDigits(duree.inHours)}:$twoDigitMinutes";
+    return "${twoDigits(duree.inHours)}h$twoDigitMinutes";
   }
 }

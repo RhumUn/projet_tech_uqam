@@ -82,4 +82,11 @@ void main() {
     expectedValue = Tools.getIconEtatValidation(false);
     expect(expectedValue, Icons.close);
   });
+
+  test('minutesToHourMinutesString', () {
+    String expectedValue;
+
+    //expectedValue = Tools.dureeToString(90);
+    expect(expectedValue, "1h30");
+  });
 }

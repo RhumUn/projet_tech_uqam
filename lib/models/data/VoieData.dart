@@ -43,9 +43,9 @@ class VoieData {
     return result;
   }
 
-  static Future<Voie> getVoieById() async {
+  static Future<Voie> getVoieById(int id) async {
     db = await databaseHelper.database;
-    var result = await db.query(voieTable);
+    var result = await db.query(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
     Voie voie = Voie.fromMapObject(result.first);
     return voie;
   }

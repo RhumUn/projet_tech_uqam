@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/models/bussiness/Seance.dart';
+import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceData.dart';
 import 'package:flutter_uqam/tools/reusable_widgets.dart';
 import 'package:flutter_uqam/tools/tools.dart';
@@ -50,6 +51,7 @@ class SeanceListState extends State<SeanceList> {
 
   ListView getSeanceListView() {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
@@ -61,9 +63,19 @@ class SeanceListState extends State<SeanceList> {
               this.seanceList[position].nom,
               style: titleStyle,
             ),
-            subtitle: Text(
-              "Date : ${Tools.dateToString(this.seanceList[position].date)} - "
-              "${Tools.heureToString(this.seanceList[position].heureDebut)}",
+            subtitle: Row(
+              children: [
+                Text(
+                    "Date : ${Tools.dateToString(this.seanceList[position].date)} - "),
+                this.seanceList[position].heureFin != DateTime(2000, 1, 1)
+                    ? Icon(Icons.timelapse)
+                    : Icon(Icons.access_time),
+                this.seanceList[position].heureFin != DateTime(2000, 1, 1)
+                    ? Text(this.seanceList[position].dureeSeance())
+                    : Text(Tools.heureToString(
+                        this.seanceList[position].heureDebut)),
+                Text(' - ${this.seanceList[position].voieList.length}voie(s)')
+              ],
             ),
             trailing: GestureDetector(
               child: Icon(
@@ -78,7 +90,8 @@ class SeanceListState extends State<SeanceList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SeanceDetails(seance: seanceList[position]),
+                  builder: (context) =>
+                      SeanceDetails(seance: seanceList[position]),
                 ),
               );
             },
@@ -105,6 +118,14 @@ class SeanceListState extends State<SeanceList> {
           this.seanceList = seanceList;
           this.count = seanceList.length;
         });
+        for(final seance in seanceList){
+          Future<List<Voie>> idVoieFuture = seance.getFutureVoieList();
+          idVoieFuture.then((listVoie) {
+            setState(() {
+              seance.voieList = listVoie;
+            });
+          });
+        }
       });
     });
   }

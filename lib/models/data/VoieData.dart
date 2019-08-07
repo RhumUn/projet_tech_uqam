@@ -1,5 +1,7 @@
 import "package:flutter_uqam/models/bussiness/Voie.dart";
 import 'package:flutter_uqam/database_helper.dart';
+import 'package:flutter_uqam/models/data/DifficulteData.dart';
+import 'package:flutter_uqam/models/data/TypeValidationData.dart';
 import 'package:sqflite/sqflite.dart';
 
 class VoieData {
@@ -23,7 +25,7 @@ class VoieData {
 
   static final String createTableScript = '''
     CREATE TABLE $voieTable(
-        $colonnePkId              Integer  PRIMARY KEY Autoincrement  NOT NULL ,
+        $colonnePkId              Integer  PRIMARY KEY Autoincrement  NOT NULL,
         $colonneNbPrise           Integer,
         $colonneNbEssais          Integer,
         $colonneEtat              Bool NOT NULL ,
@@ -32,9 +34,11 @@ class VoieData {
         $colonneNom               Varchar (50),
         $colonneCommentaire       Text,
         $colonneImage             Varchar (150),
-        $colonneFkTypeValidation  Integer NOT NULL ,
-        $colonneFkDifficulte      Integer NOT NULL ,
-        $colonneFkVoieParent      Integer
+        $colonneFkTypeValidation  Varchar (50) NOT NULL,
+        $colonneFkDifficulte      Varchar (50) NOT NULL,
+        $colonneFkVoieParent      Integer,
+        FOREIGN KEY($colonneFkTypeValidation) REFERENCES ${TypeValidationData.typeValidationTable}(${TypeValidationData.colonnePkId}),
+        FOREIGN KEY($colonneFkDifficulte) REFERENCES ${DifficulteData.difficulteTable}(${DifficulteData.colonnePkId})
   );''';
 
   static Future<List<Map<String, dynamic>>> getVoieMapList() async {

@@ -1,5 +1,6 @@
 import 'package:flutter_uqam/database_helper.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
+import 'package:flutter_uqam/models/data/SeanceData.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,7 +16,9 @@ class SeanceVoieData {
   static final String createTableScript = '''
     CREATE TABLE $seance_voieTable(
         $colonneFkVoieId       Integer NOT NULL,
-        $colonneFkSeanceId     Integer NOT NULL
+        $colonneFkSeanceId     Integer NOT NULL,
+        FOREIGN KEY($colonneFkVoieId) REFERENCES ${VoieData.voieTable}(${VoieData.colonnePkId}),
+        FOREIGN KEY($colonneFkSeanceId) REFERENCES ${SeanceData.seanceTable}(${SeanceData.colonnePkId})
   );''';
 
   static Future<List<Map<String, dynamic>>> getSeanceVoieMapList(

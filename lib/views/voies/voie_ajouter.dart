@@ -129,6 +129,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
                     setState(() {
                       voie.typeValidation = newValue;
                       state.didChange(newValue);
+                      nbEssaisController.text = '0';
                     });
                   },
                   items: _typesValidation.map((String value) {
@@ -204,7 +205,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       },
     ));
 
-    formWidget.add(new FormField(
+    /*formWidget.add(new FormField(
       builder: (FormFieldState state) {
         return InputDecorator(
           decoration: InputDecoration(
@@ -213,7 +214,36 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
           ),
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton(
-              value: _colors[0],
+              value: _colors[1],
+              isDense: true,
+              onChanged: (String newValue) {
+                setState(() {
+                  voie.couleur = newValue;
+                  state.didChange(newValue);
+                });
+              },
+              items: _colors.map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    ));*/
+
+    formWidget.add(new FormField(
+      builder: (FormFieldState state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            icon: const Icon(Icons.color_lens),
+            labelText: 'Couleur des prises',
+          ),
+          child: new DropdownButtonHideUnderline(
+            child: new DropdownButton(
+              value: voie.couleur==null || voie.couleur.isEmpty?_colors[0]:voie.couleur,
               isDense: true,
               onChanged: (String newValue) {
                 setState(() {
@@ -253,7 +283,6 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
               voie.nombre_prise = int.tryParse(nbPrisesController.text);
               voie.nombreEssais = int.tryParse(nbEssaisController.text);
               addSeanceVoie();
-              Navigator.pop(context);
             }
           },
         )));
@@ -266,6 +295,7 @@ class AjouterVoieFormState extends State<AjouterVoieForm> {
       Future<int> idVoieFuture = VoieData.insertVoie(voie);
       idVoieFuture.then((idVoie) {
         SeanceVoieData.insertSeanceVoie(widget.seance.id, idVoie);
+        Navigator.pop(context);
       });
     });
   }

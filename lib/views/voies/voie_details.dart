@@ -94,19 +94,6 @@ class VoieDetailsState extends State<VoieDetails> {
     return widgets;
   }
 
-  /*void updateListView() {
-    final Future<Database> dbFuture = DatabaseHelper().initializeDatabase();
-    dbFuture.then((database) {
-      Future<Voie> voieFuture = VoieData.getVoieById(widget.voie.id);
-      voieListFuture.then((voieList) {
-        setState(() {
-          this.voieList = voieList;
-          this.count = voieList.length;
-        });
-      });
-    });
-  }*/
-
   Future navigateToSubPage(context) async {
     Voie voieModifiee = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifierVoieForm(voie: widget.voie)));
     setState(() {

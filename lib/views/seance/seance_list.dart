@@ -90,6 +90,7 @@ class SeanceListState extends State<SeanceList> {
                 confirmFuture.then((confirm) {
                   if (confirm == ConfirmAction.VALIDER)
                     _delete(context, seanceList[position]);
+
                 });
               },
             ),
@@ -111,10 +112,10 @@ class SeanceListState extends State<SeanceList> {
   void _delete(BuildContext context, Seance seance) async {
     int resultSeance = await SeanceData.deleteSeanceById(seance.id);
     int resultSeanceVoies = await SeanceVoieData.deleteSeanceVoies(seance.id);
+    updateListView();
+    ReusableWidgets.showSnackBar(context, 'Séance supprimée avec succès');
 
     if (resultSeance != 0 && resultSeanceVoies != 0) {
-      ReusableWidgets.showSnackBar(context, 'Séance supprimée avec succès');
-      updateListView();
     }
   }
 

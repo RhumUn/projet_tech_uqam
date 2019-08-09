@@ -12,8 +12,9 @@ import 'package:flutter_uqam/database_helper.dart';
 
 class VoieSeanceList extends StatefulWidget {
   final Seance seance;
+  Function callback;
 
-  VoieSeanceList({Key key, @required this.seance}) : super(key: key);
+  VoieSeanceList({Key key, @required this.seance, this.callback}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -35,15 +36,13 @@ class VoieSeanceListState extends State<VoieSeanceList> {
     return Scaffold(
       body: ReusableWidgets.getVoieListView(voieList, _delete),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blueGrey.withOpacity(0.5),
         onPressed: () {
-          debugPrint('FAB clicked');
           Navigator.of(context)
               .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
             return new AjouterVoieForm(seance: widget.seance);
           })).then((value) {
-            setState(() {
-              updateListView();
-            });
+            updateListView();
           });
         },
         tooltip: 'Add Voie',

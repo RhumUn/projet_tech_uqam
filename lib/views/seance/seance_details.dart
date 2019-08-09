@@ -62,11 +62,15 @@ class SeanceDetailsState extends State<SeanceDetails> {
           ),
           SizedBox(
             height: 250.0, //TODO : Non dynamique
-            child: VoieSeanceList(seance: widget.seance),
+            child: VoieSeanceList(seance: widget.seance, callback: this.callback),
           ),
         ],
       ),
     );
+  }
+
+  void callback(){
+    this.build(context);
   }
 
   static List<Widget> getSeanceDetails(Seance seance) {

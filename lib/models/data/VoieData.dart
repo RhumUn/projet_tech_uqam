@@ -2,6 +2,7 @@ import "package:flutter_uqam/models/bussiness/Voie.dart";
 import 'package:flutter_uqam/database_helper.dart';
 import 'package:flutter_uqam/models/data/DifficulteData.dart';
 import 'package:flutter_uqam/models/data/TypeValidationData.dart';
+import 'package:flutter_uqam/tools/tools.dart';
 import 'package:sqflite/sqflite.dart';
 
 class VoieData {
@@ -37,8 +38,10 @@ class VoieData {
         $colonneFkTypeValidation  Varchar (50) NOT NULL,
         $colonneFkDifficulte      Varchar (50) NOT NULL,
         $colonneFkVoieParent      Integer,
-        FOREIGN KEY($colonneFkTypeValidation) REFERENCES ${TypeValidationData.typeValidationTable}(${TypeValidationData.colonnePkId}),
-        FOREIGN KEY($colonneFkDifficulte) REFERENCES ${DifficulteData.difficulteTable}(${DifficulteData.colonnePkId})
+        FOREIGN KEY($colonneFkTypeValidation) REFERENCES ${TypeValidationData
+      .typeValidationTable}(${TypeValidationData.colonnePkId}),
+        FOREIGN KEY($colonneFkDifficulte) REFERENCES ${DifficulteData
+      .difficulteTable}(${DifficulteData.colonnePkId})
   );''';
 
   static Future<List<Map<String, dynamic>>> getVoieMapList() async {
@@ -55,7 +58,8 @@ class VoieData {
 
   static Future<Voie> getVoieById(int id) async {
     db = await databaseHelper.database;
-    var result = await db.query(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
+    var result = await db.query(
+        voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
     Voie voie = Voie.fromMapObject(result.first);
     return voie;
   }
@@ -76,14 +80,14 @@ class VoieData {
   static Future<int> deleteVoieById(int id) async {
     db = await databaseHelper.database;
     int result =
-        await db.delete(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
+    await db.delete(voieTable, where: '$colonnePkId = ?', whereArgs: [id]);
     return result;
   }
 
   static Future<int> getCount() async {
     db = await databaseHelper.database;
     List<Map<String, dynamic>> x =
-        await db.rawQuery('SELECT COUNT (*) from $voieTable');
+    await db.rawQuery('SELECT COUNT (*) from $voieTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
@@ -108,5 +112,40 @@ class VoieData {
     int lastId = Sqflite.firstIntValue(x);
 
     return lastId;
+  }
+
+  static Future<int> getCountVoiesByEtat(bool etat) async {
+    db = await databaseHelper.database;
+    List<Map<String, dynamic>> x =
+    await db.rawQuery('SELECT count(id) FROM $voieTable WHERE etat == ${Tools.boolToInt(etat)}');
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  static Future<String> getDifficulteMax() async {
+    db = await databaseHelper.database;
+    List<Map<String, dynamic>> x =
+    await db.rawQuery('SELECT max($colonneFkDifficulte) As Max FROM $voieTable');
+    String result = x[0]["Max"];
+
+    return result;
+  }
+
+  static Future<int> getEssaisMax() async {
+    db = await databaseHelper.database;
+    List<Map<String, dynamic>> x =
+    await db.rawQuery('SELECT max($colonneNbEssais) FROM $voieTable');
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  static Future<List<Map<String, dynamic>>> getVoiesParDifficulte() async {
+    db = await databaseHelper.database;
+    List<String> columnsToSelect = [
+      colonneFkDifficulte,
+      "count($colonnePkId)"
+    ];
+    var result = await db.query(voieTable, columns: columnsToSelect, groupBy: colonnePkId);
+    return result;
   }
 }

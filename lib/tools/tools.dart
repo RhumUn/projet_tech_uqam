@@ -22,7 +22,7 @@ class Tools {
       return Colors.yellow;
     } else if (difficultyValue < 10) {
       return Colors.red;
-    } else if (difficultyValue > 10) {
+    } else if (difficultyValue >= 10) {
       return Colors.black;
     } else {
       return Colors.white70;
@@ -115,5 +115,11 @@ class Tools {
 
     String twoDigitMinutes = twoDigits(duree.inMinutes.remainder(60));
     return "${twoDigits(duree.inHours)}h$twoDigitMinutes";
+  }
+
+  static String minutesToString(int minutes){
+    int h = (minutes/60).round();
+    int m = minutes % 60;
+    return "${h}h$m";
   }
 }

@@ -129,6 +129,7 @@ class ModifierVoieFormState extends State<ModifierVoieForm> {
                     setState(() {
                       widget.voie.typeValidation = newValue;
                       state.didChange(newValue);
+                      nbEssaisController.text = '0';
                     });
                   },
                   items: _typesValidation.map((String value) {

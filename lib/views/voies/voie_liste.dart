@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_uqam/models/bussiness/Seance.dart';
 import 'package:flutter_uqam/models/bussiness/Voie.dart';
 import 'package:flutter_uqam/models/data/SeanceVoieData.dart';
 import 'package:flutter_uqam/models/data/VoieData.dart';
@@ -11,6 +12,10 @@ import 'package:flutter_uqam/database_helper.dart';
 enum ConfirmAction { ANNULER, VALIDER }
 
 class VoieList extends StatefulWidget {
+  Seance seance;
+  VoieList();
+  VoieList.withSeance({Key key, @required this.seance}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return VoieListState();

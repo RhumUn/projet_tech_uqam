@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_uqam/views/Seance/seance_list.dart';
+import 'package:flutter_uqam/views/statistics/statistics.dart';
 import 'package:flutter_uqam/views/voies/voie_liste.dart';
 
 class HomePage extends StatelessWidget {
-
   List<Widget> containers = [
-    Container(
-        child: VoieList()
-    ),
-    Container(
-        child: SeanceList()
-    ),
-    Container(
-      color: Colors.deepPurple,
-    )
+    Container(child: VoieList()),
+    Container(child: SeanceList()),
+    Container(child: Statistiques())
   ];
 
   @override
@@ -46,4 +40,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-

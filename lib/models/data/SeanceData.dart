@@ -16,8 +16,7 @@ class SeanceData {
   static DatabaseHelper databaseHelper = DatabaseHelper();
   static Database db;
 
-  static final String createTableScript =
-  '''
+  static final String createTableScript = '''
   CREATE TABLE $seanceTable(
         $colonnePkId          Integer  PRIMARY KEY Autoincrement  NOT NULL,
         $colonneNom           Varchar (50),
@@ -34,7 +33,8 @@ class SeanceData {
     return result;
   }
 
-  static Future<List<Map<String, dynamic>>> getSeanceMapListOrderByDate() async {
+  static Future<List<Map<String, dynamic>>>
+      getSeanceMapListOrderByDate() async {
     db = await databaseHelper.database;
     var result = await db.query(seanceTable, orderBy: "$colonneDate DESC");
     return result;
@@ -48,20 +48,22 @@ class SeanceData {
 
   static Future<int> updateSeance(Seance seance) async {
     db = await databaseHelper.database;
-    var result = await db.update(seanceTable, seance.toMap(), where: '$colonnePkId = ?', whereArgs: [seance.id]);
+    var result = await db.update(seanceTable, seance.toMap(),
+        where: '$colonnePkId = ?', whereArgs: [seance.id]);
     return result;
   }
 
   static Future<int> deleteSeanceById(int id) async {
     db = await databaseHelper.database;
-    int result = await db.delete(seanceTable, where: '$colonnePkId = ?', whereArgs: [id]);
+    int result = await db
+        .delete(seanceTable, where: '$colonnePkId = ?', whereArgs: [id]);
     return result;
   }
 
   static Future<int> getCount() async {
     db = await databaseHelper.database;
     List<Map<String, dynamic>> x =
-    await db.rawQuery('SELECT COUNT (*) from $seanceTable');
+        await db.rawQuery('SELECT COUNT (*) from $seanceTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
@@ -78,5 +80,38 @@ class SeanceData {
     }
 
     return seanceList;
+  }
+
+  static Future<int> getTempsTotalGrimpe() async {
+    List<String> columnsToSelect = [
+      "sum(Cast((JulianDay($colonneHeureFin) - JulianDay($colonneHeureDebut)) * 24 * 60 As Integer)) As Duree"
+    ];
+    var x = await db.query(seanceTable,
+        columns: columnsToSelect,
+        where: "$colonneHeureDebut NOTNULL AND $colonneHeureFin NOTNULL AND heureFin != \"2000-01-01 00:00:00.000\"");
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  static Future<int> getDureeMaxSeance() async {
+    List<String> columnsToSelect = [
+      "max(Cast((JulianDay($colonneHeureFin) - JulianDay($colonneHeureDebut)) * 24 * 60 As Integer)) As Duree"
+    ];
+    var x = await db.query(seanceTable,
+        columns: columnsToSelect,
+        where: "$colonneHeureDebut NOTNULL AND $colonneHeureFin NOTNULL");
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  static Future<int> getDureeMinSeance() async {
+    List<String> columnsToSelect = [
+      "min(Cast((JulianDay($colonneHeureFin) - JulianDay($colonneHeureDebut)) * 24 * 60 As Integer)) As Duree"
+    ];
+    var x = await db.query(seanceTable,
+        columns: columnsToSelect,
+        where: "$colonneHeureDebut NOTNULL AND $colonneHeureFin NOTNULL AND heureFin != \"2000-01-01 00:00:00.000\"");
+    int result = Sqflite.firstIntValue(x);
+    return result;
   }
 }

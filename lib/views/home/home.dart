@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                 text: 'Séances',
               ),
               Tab(
-                text: 'Stats',
+                text: 'Statistiques',
               ),
             ],
           ),
